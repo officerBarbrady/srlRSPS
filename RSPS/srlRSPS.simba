@@ -7,29 +7,27 @@
 
 {$include_once misc/simba.simba}
 
-function _rsps_server.init(revision:Integer;serverName:string):_rsps_server; overload;
+function _rsps_server.init(revision:Integer;serverName:string):_rsps_server;
 begin
+  rsps_inventory.init(revision);
   case revision of
     317..507:
     begin
       result.version := revision;
       result.name := serverName;
       result.getUpText := @_317upText;
-      _317_setInv;
     end;
     507..719:
     begin
       result.version := revision;
       result.name := serverName;
-      result.getUpText := @ss_getUpText;
-      _508_setInv;
+      result.getUpText := @_508UpText;
     end;
     720..800:
     begin
       result.version := revision;
       result.name := serverName;
       result.getUpText := @rs_getUpText;
-      _714_setInv;
     end;
   end;
 end;

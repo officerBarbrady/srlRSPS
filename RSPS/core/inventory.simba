@@ -1,4 +1,15 @@
-function boxCenter(bx: TBox): TPoint;
+{$include_once mouse.simba}
+
+type
+  rsps_inventory = record(rsps_interface)
+    slots:TboxArray;
+    outline:Integer;
+  end;
+
+var
+  inventory:rsps_inventory;
+
+function rsps_inventory.boxCenter(bx: TBox): TPoint;
 begin
   if ((bx.X1 > bx.X2) or (bx.Y1 > bx.Y2)) then
   begin
@@ -10,7 +21,7 @@ begin
   Result := Point(Round(bx.X1 + ((bx.X2 - bx.X1) div 2)), Round(bx.Y1 + ((bx.Y2 - bx.Y1) div 2)));
 end;
 
-function explodeBox(bx: TBox; rows, columns: integer): TBoxArray;
+function rsps_inventory.explodeBox(bx: TBox; rows, columns: integer): TBoxArray;
 var
   r, c, w, h, ew, eh, ow, oh, i, x, y: integer;
 begin
@@ -60,38 +71,118 @@ begin
     SetLength(result, 0);
 end;
 
-procedure _317_setInv;
+procedure rsps_inventory.setUp(b:tbox);
 begin
-  inventory := ExplodeBox(IntToBox(563, 214, 720, 460), 7, 4);
+  inventory.slots := explodeBox(b, 7, 4);
 end;
 
-procedure _508_setInv;
+procedure rsps_inventory.init(rev:Integer);
 begin
-  inventory := ExplodeBox(IntToBox(563, 214, 720, 460), 7, 4);
+  case rev of
+    317..507:
+    begin
+      self.outline := 65536;
+      rsps_inventory.setUp(IntToBox(563, 214, 720, 460));
+      self.bounds := intToBox(0, 0, 0, 0);
+      self.name := '317 inventory';
+    end;
+    507..719:
+    begin
+       self.outline := 65536;
+      rsps_inventory.setUp(IntToBox(563, 214, 720, 460));
+      self.bounds := intToBox(0, 0, 0, 0);
+      self.name := '508 inventory';
+    end;
+    720..800:
+    begin
+      self.outline := 131072;
+      rsps_inventory.setUp(IntToBox(568, 213, 717, 458));
+      self.bounds := intToBox(0, 0, 0, 0);
+      self.name := '724 inventory';
+    end;
+  end;
 end;
 
-procedure _714_setInv;
-begin
-  inventory := ExplodeBox(IntToBox(568, 213, 717, 458), 7, 4);
-end;
-
-function rsps_slotFull(slot:Integer):Boolean;
+function rsps_inventory.slotFull(slot:Integer):Boolean;
 var
   x, y:Integer;
 begin
-  if FindColor(x, y, 131072, inventory[slot].x1, inventory[slot].y1, inventory[slot].x2, inventory[slot].y2) or
-  FindColor(x, y, 65536, inventory[slot].x1, inventory[slot].y1, inventory[slot].x2, inventory[slot].y2)
-   then
-    result := true;
+  exit(FindColor(x, y, inventory.outline, inventory.slots[slot].x1, inventory.slots[slot].y1, inventory.slots[slot].x2, inventory.slots[slot].y2));
 end;
 
-function rsps_invCount:Integer;
+function rsps_inventory.invCount:Integer;
 var
   i:Integer;
 begin
- for i := 0 to high(inventory) do
+ for i := 0 to high(inventory.slots) do
   begin
-    if rsps_slotFull(i) then
+    if rsps_inventory.slotFull(i) then
       result := result + 1;
+  end;
+end;
+
+function rsps_inventory.invFull:Boolean;
+begin
+  exit(rsps_inventory.invCount = 28);
+end;
+
+procedure rsps_inventory.interactItem(slot:Integer; Button:Integer);
+begin
+  mouse(rsps_inventory.boxCenter(inventory.slots[slot]).x, rsps_inventory.boxCenter(inventory.slots[slot]).y, 0, 0, BUTTON);
+end;
+
+function rsps_inventory.searchInventoryBitmap(BMPSearch, tol:Integer;click, cont:Boolean):Boolean;
+var
+  i, x, y:Integer;
+begin
+  for i := 0 to high(Inventory) do
+  begin
+    If FindBitmaptoleranceIn(BMPsearch, x, y, inventory.slots[i].X1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2, tol) then
+    begin
+      result := true;
+      if click then
+        rsps_inventory.interactItem(i, left);
+      if not cont then
+        exit;
+    end;
+  end;
+end;
+
+function rsps_inventory.countInventoryBitmap(bmpSearch, tol:Integer):Integer;
+var
+  i, x, y:Integer;
+begin
+  for i := 0 to high(Inventory) do
+  begin
+    If FindBitmaptoleranceIn(BMPsearch, x, y, inventory.slots[i].X1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2, tol) then
+      result := result + 1;
+  end;
+end;
+
+function rsps_inventory.countInventoryDTM(DTMSearch:Integer):Integer;
+var
+  i, x, y:Integer;
+begin
+  for i := 0 to high(Inventory) do
+  begin
+    if FindDTM(DTMSearch, x, y, inventory.slots[i].x1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2) then
+      result := result + 1;
+  end;
+end;
+
+function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;click, cont:Boolean):Boolean;
+var
+  I, x, y:Integer;
+begin
+  for i := 0 to high(Inventory) do
+  begin
+    if FindDTM(DTMSearch, x, y, inventory.slots[i].x1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2) then
+    begin
+      result := true;
+      if click then
+        rsps_inventory.interactItem(i, left);
+      if not cont then
+        exit;
+    end;
   end;
 end;

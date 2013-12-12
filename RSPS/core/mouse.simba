@@ -1,3 +1,6 @@
+
+{$include_once math.simba}
+
 procedure WindMouse(xs, ys, xe, ye, gravity, wind, minWait, maxWait, maxStep, targetArea: extended);
 var
   veloX, veloY, windX, windY, veloMag, dist, randomDist, lastDist, step: extended;
