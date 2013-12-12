@@ -123,7 +123,7 @@ end;
 
 function rsps_inventory.invFull:Boolean;
 begin
-  exit(rsps_inventory.invCount = 28);
+  result := (self.invCount() = 28);
 end;
 
 procedure rsps_inventory.interactItem(slot:Integer; Button:Integer);
