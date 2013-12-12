@@ -1,0 +1,212 @@
+{$I RSPS/misc/Simba.Simba}
+
+function containsText(checkText: String; text: TStringArray): boolean;
+var
+  theText: string;
+  i: Integer;
+begin
+  theText := checkText;
+  for i := 0 to high(text) do
+  if (pos(text[i], theText) > 0) then
+    exit(true);
+end;
+
+function _317_ChooseOptionMulti(Text: TStringArray): boolean;
+var
+  whiteBoxT,blueBoxT,yellowBoxT,orangeBoxT,foundText: string;
+  optionTB:tbox;
+  optionBoxTPA1: tpointarray;
+  numberOfOptions, c ,x, y: integer;
+begin
+  findColors(OptionBoxTPA1, 4674653, 0, 0, 764, 502);
+  optionTb:=getTPABounds(optionBoxTpa1);
+  if (length(OptionBoxTPA1) < 10) then
+    exit(false);
+  numberOfOptions := round(((OptionTB.Y2-2) - (OptionTB.Y1+21)) / 14);
+  for C:=0 To (NumberOfOptions-1) do
+  begin
+    If (OptionTB.Y1+21+(C*15)) > OptionTB.Y1+21+((C+1)*14) then
+    begin
+      Result:=False;
+      Break;
+    end;
+    whiteBoxT := getTextAtEx(OptionTB.X1+2, OptionTB.Y1+21+(C*15), OptionTB.X2-2, OptionTB.Y1+21+((C+1)*14), 0, 5, 1, 16777215, 5, 'UpChars07');
+    blueBoxT := getTextAtEx(OptionTB.X1+2, OptionTB.Y1+21+(C*15), OptionTB.X2-2, OptionTB.Y1+21+((C+1)*14), 0, 5, 1, 16776960, 5, 'UpChars07');
+    yellowBoxT := getTextAtEx(OptionTB.X1+2, OptionTB.Y1+21+(C*15), OptionTB.X2-2, OptionTB.Y1+21+((C+1)*14), 0, 5, 1, 65535, 5, 'UpChars07');
+    orangeBoxT := getTextAtEx(OptionTB.X1+2, OptionTB.Y1+21+(C*15), OptionTB.X2-2, OptionTB.Y1+21+((C+1)*14), 0, 5, 1, 4231423, 5, 'UpChars07');
+    foundText := WhiteBoxT+' '+BlueBoxT+YellowBoxT+OrangeBoxT;
+    if (containsText(foundText,text)) then
+    begin
+      MMouse(RandomRange(OptionTB.X1+2,OptionTB.X2-2),RandomRange(OptionTB.Y1+21+(C*14),OptionTB.Y1+21+((C+1)*14)),0,0);
+      ClickMouse2(mouse_left);
+      exit(true);
+    end;
+  end;
+  GetMousePos(X,Y);
+  if Y > 21 then
+    MMouse(RandomRange(OptionTB.X1+2,OptionTB.X2-2),RandomRange(Y-10,Y-20),0,0)
+  else
+    MMouse(RandomRange(5,535),RandomRange(350,490),0,0);
+  result := false;
+end;
+
+Function _724_getChooseOptions(TextType: string): Array of TOptions;
+var
+   B, BB, sB, BigBox: TBox;
+   TPA, TPA1, TPA2: TPointArray;
+   ATPA, tempatpa: T2DPointArray;
+   I, L, target, bmp,w,h, cts: Integer;
+   BoxColors: TIntegerArray;
+begin
+  target := GetImageTarget;
+  GetClientDimensions(B.X2, B.Y2);
+  B := IntToBox(0, 0, B.X2-1, B.Y2-1);
+  cts := GetColorToleranceSpeed;
+  ColorToleranceSpeed(1);
+
+  BoxColors := [131843, 3682593, 3552822];
+  SetLength(ATPA, Length(BoxColors));
+  for i := 0 to High(BoxColors) do
+    FindColorsTolerance(ATPA[i], BoxColors[i], B.X1, B.Y1, B.X2, B.Y2, 0);
+  TPA := MergeATPA(ATPA);
+  If Length(TPA) < 100 Then
+  begin
+    ColorToleranceSpeed(cts);
+    Exit;
+  end;
+
+  ATPA := SplitTPA(TPA, 4);
+  For i := 0 to High(ATPA) do
+  begin
+    B := GetTPABounds(ATPA[i]);
+    if ((B.x2-B.x1) > 90) and ((B.y2-B.y1) > 18) then
+      Break
+    else
+      B := IntToBox(0, 0, 0, 0);
+  end;
+
+  If (B.x2 = 0) then
+  begin
+    ColorToleranceSpeed(cts);
+    Exit;
+  end;
+
+  BigBox := B;
+
+  SetColorToleranceSpeed(3);
+  FindColorsTolerance(TPA1, 4996381, B.X1, B.Y1, B.X2, B.Y2, 18);
+  sB := GetTPABounds(TPA1);
+  ReturnPointsNotInTPAWrap(TPA1, sB, TPA);
+  FindColorsTolerance(TPA2, 460291, B.X1, B.Y1, B.X2, B.Y2, 6);
+  SetColorToleranceSpeed(cts);
+
+  bmp := CreateBitmap(B.X2-B.X1+2, B.Y2-B.Y1+2);
+  OffsetTPA(TPA, Point(-B.X1, -B.Y1));
+  OffsetTPA(TPA2, Point(-B.X1, -B.Y1));
+  FastDrawClear(bmp, 0);
+  DrawTPABitmap(bmp, TPA, clRed);
+  DrawTPABitmap(bmp, TPA2, clPurple);
+  ocr_FilterUpTextByCharacteristics(GetMufasaBitmap(bmp));
+  GetbitmapSize(bmp,w,h);
+  SetTargetBitmap(bmp);
+  SetLength(ATPA, H div 16);
+  for i := 0 to High(ATPA) do
+    FindColorsTolerance(ATPA[i], clRed, 0, 2+i*16,  W-1, 18+i*16, 0);
+  L := High(ATPA);
+  SortATPAFromFirstPointY(ATPA, Point(w div 2,0));
+
+  SetArrayLength(Result, Length(ATPA));
+  Result[0].BigBox := BigBox;
+  for i := 0 to high(ATPA) do
+  begin
+    TPA := ATPA[i];
+    tempatpa := SplitTPAEx(TPA, 1, 10);
+    SortATPAFromFirstPointX(tempatpa, Point(0, 0));
+    Result[i].Str := GetTextATPA(tempatpa, 5, 'UpCharsEx');
+    BB := GetTPABounds(ATPA[i]);
+    Result[i].Bounds := IntToBox(BB.X1+B.X1, BB.Y1+B.Y1, BB.X2+B.X1, BB.Y2+B.Y1);
+    setlength(tempatpa,0);
+    setlength(TPA,0);
+  end;
+  ColorToleranceSpeed(cts);
+  SetImageTarget(target);
+  FreeBitmap(bmp);
+end;
+
+function ChooseOptionMultiEx(Texts: TStringArray; TextType: String; Action: fnct_ActionOptions): Boolean;
+var
+   B: TBox;
+   i, H, x, R: Integer;
+   T: TPoint;
+   Options: array of TOptions;
+begin
+  Result := False;
+  Options := _724_getChooseOptions(TextType);
+  if (Length(Options) < 1) then
+    Exit;
+  H := High(Options);
+  for i := 0 To H do
+  begin
+    if ArrInStr(Texts, Options[i].Str) then
+    begin
+      Result := True;
+      B := Options[i].Bounds;
+      GetMousePos(T.x, T.y);
+
+      R:= Min(((B.X2 - B.X1) shr 1), 5);
+      case Action of
+        ClickLeft:
+          if PointInBox(T, B) then
+            ClickMouse2(left)
+          else
+            MouseBoxEx(B.x1 + R, B.Y1, B.x2 - R, B.Y1 + 5, R, mouse_Left);
+
+        Move:
+          if not PointInBox(T, B) then
+            MouseBoxEx(B.x1 + R, B.Y1, B.x2 - R, B.Y1 + 5, R, mouse_move);
+
+        Nothing:
+          begin
+          end;
+
+        else
+          writeLn('ChooseOptionMultiEx ', ' ClickRight not a valid click for RS menus!');
+      end;
+      Exit;
+    end;
+  end;
+  B := Options[0].BigBox;
+  if Action <> Nothing then
+  begin
+    x := Max(B.X1 - 52, 0);
+    if x = 0 then
+      x := B.X2+10;
+    MMouse(x, Max(B.Y1 - 50, 0), 40, B.Y2-B.Y1);
+    Wait(200 + Random(100));
+  end;
+end;
+
+function chooseOptionMulti(Txt: TStringArray): Boolean;
+begin
+  Result := ChooseOptionMultiEx(Txt, 'All', ClickLeft);
+end;
+
+function chooseOptionEx(Txt, TextType: string): Boolean;
+begin
+  Result := ChooseOptionMultiEx([Txt], TextType, ClickLeft);
+end;
+
+function chooseOption(Txt: String): Boolean;
+begin
+  Result := ChooseOptionMultiEx([Txt], 'All', ClickLeft);
+end;
+
+function _317upText:string;
+begin
+  result := '5';
+end;
+
+function _508upText:string;
+begin
+  result := '5';
+end;

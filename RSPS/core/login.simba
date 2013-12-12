@@ -1,0 +1,6 @@
+Procedure rsps_SetangleHigh;
+begin
+  Keydown(VK_Up);
+  wait(RandomRange(2000, 3000));
+  KeyUp(VK_Up);
+end;

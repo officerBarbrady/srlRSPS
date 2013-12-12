@@ -1,0 +1,30 @@
+
+const
+  clRed = 255;
+  clPurple = 69;
+  mouse_move = 3;
+
+var
+  ms:TBox;
+  inventory:TBoxArray;
+  mouseSpeed:Integer;
+  right:Integer = 0;
+  left:Integer = 1;
+
+type
+  _rsps_server = record
+    version:Integer;
+    name:string;
+    getupText:function:string;
+    getOptions:function:TStringArray;
+    bankScreen, loggedIn:function:boolean;
+    inventory:TBoxArray;
+  end;
+
+type
+  TOptions = record
+    Str: string;
+    Bounds, BigBox: TBox;
+  end;
+type
+  fnct_ActionOptions = (ClickRight, ClickLeft, ClickMiddle, Move, Nothing);

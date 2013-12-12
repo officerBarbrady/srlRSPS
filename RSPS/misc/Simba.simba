@@ -1,0 +1,19 @@
+function GetSystemTime: LongWord; override;
+begin
+  Result := GetTickCount;
+end;
+
+procedure TerminateScript; override;
+begin
+  Halt();
+end;
+
+procedure ColorToleranceSpeed(cts : integer);
+begin;
+  SetColorToleranceSpeed(cts);
+end;
+
+function getColorToleranceSpeed:Integer;
+begin
+  exit(GetToleranceSpeed);
+end;

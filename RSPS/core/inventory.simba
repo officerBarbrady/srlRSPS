@@ -1,0 +1,97 @@
+function boxCenter(bx: TBox): TPoint;
+begin
+  if ((bx.X1 > bx.X2) or (bx.Y1 > bx.Y2)) then
+  begin
+    if (bx.X1 > bx.X2) then
+      Swap(bx.X1, bx.X2);
+    if (bx.Y1 > bx.Y2) then
+      Swap(bx.Y1, bx.Y2);
+  end;
+  Result := Point(Round(bx.X1 + ((bx.X2 - bx.X1) div 2)), Round(bx.Y1 + ((bx.Y2 - bx.Y1) div 2)));
+end;
+
+function explodeBox(bx: TBox; rows, columns: integer): TBoxArray;
+var
+  r, c, w, h, ew, eh, ow, oh, i, x, y: integer;
+begin
+  if ((rows > 0) and (columns > 0) and (bx.X1 <= bx.X2) and (bx.Y1 <= bx.Y2)) then
+  begin
+    w := ((bx.X2 - bx.X1) + 1);
+    h := ((bx.Y2 - bx.Y1) + 1);
+    if (rows < 1) then
+      rows := 1
+    else
+      if (rows > h) then
+        rows := h;
+    if (columns < 1) then
+      columns := 1
+    else
+      if (columns > w) then
+        columns := w;
+    w := (w div columns);
+    h := (h div rows);
+    ew := (((bx.X2 - bx.X1) + 1) - (w * columns));
+    eh := (((bx.Y2 - bx.Y1) + 1) - (h * rows));
+    SetLength(result, (rows * columns));
+    y := bx.Y1;
+    for r := 0 to (rows - 1) do
+    begin
+      x := bx.X1;
+      if ((eh > 0) and (r < eh)) then
+        oh := 1
+      else
+        oh := 0;
+      for c := 0 to (columns - 1) do
+      begin
+        if ((ew > 0) and (c < ew)) then
+          ow := 1
+        else
+          ow := 0;
+        i := ((r * columns) + c);
+        result[i].X1 := x;
+        result[i].X2 := (x + (w - 1) + ow);
+        result[i].Y1 := y;
+        result[i].Y2 := (y + (h - 1) + oh);
+        x := (Result[i].X2 + 1);
+      end;
+      y := (result[i].Y2 + 1);
+    end;
+  end else
+    SetLength(result, 0);
+end;
+
+procedure _317_setInv;
+begin
+  inventory := ExplodeBox(IntToBox(563, 214, 720, 460), 7, 4);
+end;
+
+procedure _508_setInv;
+begin
+  inventory := ExplodeBox(IntToBox(563, 214, 720, 460), 7, 4);
+end;
+
+procedure _714_setInv;
+begin
+  inventory := ExplodeBox(IntToBox(568, 213, 717, 458), 7, 4);
+end;
+
+function rsps_slotFull(slot:Integer):Boolean;
+var
+  x, y:Integer;
+begin
+  if FindColor(x, y, 131072, inventory[slot].x1, inventory[slot].y1, inventory[slot].x2, inventory[slot].y2) or
+  FindColor(x, y, 65536, inventory[slot].x1, inventory[slot].y1, inventory[slot].x2, inventory[slot].y2)
+   then
+    result := true;
+end;
+
+function rsps_invCount:Integer;
+var
+  i:Integer;
+begin
+ for i := 0 to high(inventory) do
+  begin
+    if rsps_slotFull(i) then
+      result := result + 1;
+  end;
+end;
