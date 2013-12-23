@@ -22,7 +22,7 @@ begin
       result.bankScreen := nil;
       result.loggedIn := nil;
     end;
-    507..719:
+    508..719:
     begin
       result.version := revision;
       result.name := serverName;
