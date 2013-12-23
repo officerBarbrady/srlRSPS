@@ -1,0 +1,4 @@
+function _724_BankScreen: Boolean;
+begin
+  result := findTextTPA(4106994, 20, 20, 22, 400, 45, 'Bank', upCharsEx, nothing);
+end;

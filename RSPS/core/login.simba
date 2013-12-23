@@ -4,3 +4,8 @@ begin
   wait(RandomRange(2000, 3000));
   KeyUp(VK_Up);
 end;
+
+function _724_loggedIn:boolean;
+begin
+  result := (getColor(471, 491) = 16777215);
+end;

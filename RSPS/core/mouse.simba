@@ -119,19 +119,42 @@ begin
   {$ENDIF}
 end;
 
-procedure ClickMouse2(button: Integer);
+procedure mmouse(x, y:Integer);overload;
+begin
+  mmouse(x, y, 0, 0);
+end;
+
+function VariantIsBoolean(const v: Variant): Boolean;
+begin
+  Result := VarType(v) = varBoolean;
+end;
+
+procedure ClickMouse2(button: variant);
 var
   a,b,c : integer;
   iButton: Integer;
 begin
-  GetMousePos(b, c);
-  HoldMouse(b, c, button);
+  { Eventually, should be made to just use Integers }
+  if VariantIsBoolean(button) then
+  begin
+    if (button) then
+      iButton := mouse_left
+    else
+      iButton := mouse_right;
+  end else
+    iButton := button;
 
-  for a := 0 to 5 do
-    Wait(20 + Random(20));
+  if (iButton = mouse_move) then Exit; { we aren't actually clicking! }
 
   GetMousePos(b, c);
-  ReleaseMouse(b, c, button);
+
+  HoldMouse(b, c, iButton);
+  repeat
+    Wait(20 + Random(30));
+    a := a + 1;
+  until (a > 4);
+  GetMousePos(b, c);
+  ReleaseMouse(b, c, iButton);
   Wait(50+Random(50));
 end;
 
@@ -140,6 +163,22 @@ begin
   MMouse(mousex, mousey, ranx, rany);
   Wait(60 + Random(30));
   ClickMouse2(button);
+  Wait(50 + Random(50));
+end;
+
+procedure Mouse(mousex, mousey: Integer; button: variant);overload;
+begin
+  MMouse(mousex, mousey, 0, 0);
+  Wait(60 + Random(30));
+  ClickMouse2(button);
+  Wait(50 + Random(50));
+end;
+
+procedure Mouse(mousex, mousey: Integer; button: fnct_actionOptions);overload;
+begin
+  MMouse(mousex, mousey, 0, 0);
+  Wait(60 + Random(30));
+  ClickMouse2(1);
   Wait(50 + Random(50));
 end;
 

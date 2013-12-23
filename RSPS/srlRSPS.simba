@@ -4,6 +4,9 @@
 {$include_once core/math.simba}
 {$include_once core/mouse.simba}
 {$include_once core/text.simba}
+{$include_once core/timing.simba}
+{$include_once core/mainscreen.simba}
+{$include_once core/bank.simba}
 
 {$include_once misc/simba.simba}
 
@@ -16,18 +19,26 @@ begin
       result.version := revision;
       result.name := serverName;
       result.getUpText := @_317upText;
+      result.bankScreen := nil;
+      result.loggedIn := nil;
     end;
     507..719:
     begin
       result.version := revision;
       result.name := serverName;
       result.getUpText := @_508UpText;
+      result.bankScreen := nil;
+      result.loggedIn := nil;
     end;
     720..800:
     begin
       result.version := revision;
       result.name := serverName;
       result.getUpText := @rs_getUpText;
+      result.bankScreen := @_724_BankScreen;
+      result.loggedIn := @_724_loggedin;
+      screen.init(revision);
+      rsps_inventory.init(revision);
     end;
   end;
 end;

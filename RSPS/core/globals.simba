@@ -3,12 +3,14 @@ const
   clRed = 255;
   clPurple = 69;
   mouse_move = 3;
+  VK_ENTER = {$IFDEF LINUX}10{$ELSE}VK_RETURN{$ENDIF};
 
 var
   ms:TBox;
   mouseSpeed:Integer;
   right:Integer = 0;
   left:Integer = 1;
+  username, password:string;
 
 type
   _rsps_server = record

@@ -17,3 +17,25 @@ function getColorToleranceSpeed:Integer;
 begin
   exit(GetToleranceSpeed);
 end;
+
+procedure SetColorspeed2Modifiers(huemodifier, saturationmodifier: Extended);
+begin
+  SetToleranceSpeed2Modifiers(Huemodifier, saturationmodifier);
+end;
+
+function findColorTolerance(var x, y:Integer;col:Integer;b:TBox;tol:Integer):boolean;overload;
+begin
+  result := findColorTolerance(x, y, col, b.x1, b.y1, b.x2, b.y2, tol);
+end;
+
+function findColorTolerance(col:Integer;b:TBox;tol:Integer):boolean;overload;
+var
+  x, y:Integer;
+begin
+  result := findColorTolerance(x, y, col, b.x1, b.y1, b.x2, b.y2, tol);
+end;
+
+function findColorsTolerance(var tpa:TPointArray;col:Integer;b:TBox;tol:Integer):boolean;overload;
+begin
+  result := findColorstolerance(tpa, col, b.x1, b.y1, b.x2, b.y2, tol);
+end;
