@@ -1,0 +1,27 @@
+function string.startsWith(s:string):boolean;
+begin
+  result := self[1] = s;
+end;
+
+function string.endsWith(s:string):boolean;
+begin
+  result := self[length(self)] = s
+end;
+
+function string.size:integer;
+begin
+  result := length(self);
+end;
+
+function string.toArray:tstringarray;
+var
+  i:integer;
+begin
+  for i := 1 to length(self) do
+    result[i - 1] := self[i];
+end;
+
+function string.rand:string;
+begin
+  result := self[random(self.size) + 1];
+end;

@@ -1,0 +1,4 @@
+function extended.toInt:integer;
+begin
+  result := round(self);
+end;

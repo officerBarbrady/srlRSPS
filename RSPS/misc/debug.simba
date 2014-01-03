@@ -1,11 +1,9 @@
-//-----------------------------------------------------------------//
-//--               SRL Resource Library                          --//
-//--               ? Debug Routines                              --//
-//-----------------------------------------------------------------//
-// * procedure DebugBitmap(Bmp: Integer)`                         // by Cazax
-// * function DebugTPA(Points: TPointArray; BmpName: String): Boolean; // by Wizzup?
-// * function DebugATPA(Points: TPointArray; BmpName: String): Boolean; // by Wizzup?
-// * procedure DebugATPABounds(aPoints: Array Of TPointArray);     // by Wizzup?, lordsaturn, & caused
+(*
+  File name: debug.simba
+  Description: Contains functions that debug tpointarrays/t2dpointarrays
+  Authors: Cazax, Wizzup?, lordsaturn, caused
+*)
+
 const
   clRed = 255;
   clBlue = 16711738;
@@ -14,11 +12,11 @@ const
   clYellow = 1953279;
 
 
-{*******************************************************************************
-Procedure DebugBitmap(Bmp: Integer);
-By: Cazax
-Description: Shows a bitmap in the debug image window.
-*******************************************************************************}
+(*
+  Auther: Cazax
+  Description: Shows a bitmap in the debug image window.
+*)
+
 procedure DebugBitmap(Bmp: Integer);
 var
   W, H: Integer;
@@ -32,12 +30,12 @@ begin
   end;
 end;
 
-{*******************************************************************************
-function DebugTPA(Points: TPointArray; BmpName: string): Boolean;
-By: Wizzup?
-Description: Shows an image of the Debug screen, plotting colors over the points
-stored in Points TPA. If a name is specified, an image will be saved to that path.
-*******************************************************************************}
+(*
+  Auther: Wizzup?
+  Description: Shows an image of the Debug screen, plotting colors over the points
+  stored in Points TPA. If a name is specified, an image will be saved to that path..
+*)
+
 function DebugTPA(Points: TPointArray; BmpName: string): Boolean;
 var
   Bmp: integer;
@@ -57,13 +55,13 @@ begin
   Result := True;
 end;
 
-{*******************************************************************************
-function DebugATPA(aPoints: array of TPointArray; BmpName: string): Boolean;
-By: Wizzup
-Description: Shows an image of the client, plotting each TPA of the 2D point
-             array aPoints. Each TPA is a different color. If a name is
-             specified, an image will be saved.
-*******************************************************************************}
+(*
+  Auther: Wizzup?
+  Description: Shows an image of the client, plotting each TPA of the 2D point
+  array aPoints. Each TPA is a different color. If a name is specified, an image
+  will be saved.
+*)
+
 function DebugATPA(aPoints: T2DPointArray; BmpName: string): Boolean;
 var
    Width, Height, ClientBMP: Integer;
@@ -88,13 +86,12 @@ begin
   Result := True;
 end;
 
-{*******************************************************************************
-procedure DebugATPABounds(aPoints: Array Of TPointArray);
-By: Wizzup?, lordsaturn, & caused
-Description: Shows an image of the client, plotting each TPA's bounds as a box
-             of different colour per TPA. If a name is specified, an image
-             will be saved.
-*******************************************************************************}
+(*
+  Auther: Wizzup?, lordsaturn, & caused
+  Description: Shows an image of the client, plotting each TPA's bounds as a box
+  of different colour per TPA. If a name is specified, an image will be saved.
+*)
+
 procedure DebugATPABounds(aPoints: array Of TPointArray);
 var
   Width, Height, ClientBMP, I: Integer;

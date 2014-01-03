@@ -1,32 +1,77 @@
+(*
+  File name: Simba.simba
+  Description: Contains functions that are called within simba, and extra overloaded
+  functions
+  Authors: Officer Barbrady
+*)
+
+
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
+
 function GetSystemTime: LongWord; override;
 begin
   Result := GetTickCount;
 end;
+
+(*
+  Author: ??
+  Description: Terminates script
+*)
 
 procedure TerminateScript; override;
 begin
   Halt();
 end;
 
+(*
+  Author: ??
+  Description: Sets color tolerance speed(CTS)
+*)
+
 procedure ColorToleranceSpeed(cts : integer);
 begin;
   SetColorToleranceSpeed(cts);
 end;
+
+(*
+  Author: ??
+  Description: Gets color tolerance speed(CTS)
+*)
 
 function getColorToleranceSpeed:Integer;
 begin
   exit(GetToleranceSpeed);
 end;
 
+(*
+  Author: ??
+  Description: Sets color tolerance speed modifiers
+*)
+
 procedure SetColorspeed2Modifiers(huemodifier, saturationmodifier: Extended);
 begin
   SetToleranceSpeed2Modifiers(Huemodifier, saturationmodifier);
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: overload for findColorTolerance, using box instead of integers
+*)
+
 function findColorTolerance(var x, y:Integer;col:Integer;b:TBox;tol:Integer):boolean;overload;
 begin
   result := findColorTolerance(x, y, col, b.x1, b.y1, b.x2, b.y2, tol);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: overload for findColorTolerance, using box instead of integers,
+  does not need to use var x, y
+*)
 
 function findColorTolerance(col:Integer;b:TBox;tol:Integer):boolean;overload;
 var
@@ -35,7 +80,57 @@ begin
   result := findColorTolerance(x, y, col, b.x1, b.y1, b.x2, b.y2, tol);
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: overload for findColorsTolerance, using box instead of integers
+*)
+
 function findColorsTolerance(var tpa:TPointArray;col:Integer;b:TBox;tol:Integer):boolean;overload;
 begin
   result := findColorstolerance(tpa, col, b.x1, b.y1, b.x2, b.y2, tol);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: overload for findColorsSpiralTolerance, using box instead of integers
+*)
+
+function findColorsSpiralTolerance(x, y:Integer;var tpa:TPointArray;col:Integer;b:TBox;tol:Integer):boolean;overload;
+begin
+  result := findColorsSpiraltolerance(x, y, tpa, col, b.x1, b.y1, b.x2, b.y2, tol);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: overload for findColors, using box instead of integers
+*)
+
+function findColors(var tpa:tpointarray, color:integer;b:tbox):boolean;overload;
+begin
+  result := findColors(tpa, color, b.x1, b.y1, b.x2, b.y2);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: overload for findColor, using box instead of integers
+*)
+
+function findColor(var x, y:integer;color:integer;b:tbox):boolean; overload;
+begin
+  result := findColor(x, y, color, b.x1, b.y1, b.x2, b.y2);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: overload for findColor, using box instead of integers
+  does not need to use var x, y
+*)
+
+function findColor(color:integer;b:tbox):boolean; overload;
+var
+  x, y:integer;
+begin
+  result := findColor(x, y, color, b.x1, b.y1, b.x2, b.y2);
+end;
+
+

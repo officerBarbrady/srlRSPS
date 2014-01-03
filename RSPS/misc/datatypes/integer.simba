@@ -1,0 +1,9 @@
+function integer.parse:string;
+begin
+  result := tostr(self);
+end;
+
+function integer.divide(d:integer):integer;
+begin
+  result := round(self/d);
+end;

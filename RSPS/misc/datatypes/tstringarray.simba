@@ -1,0 +1,53 @@
+function tstringarray.size:integer;
+begin
+  result := length(self);
+end;
+
+function tstringarray.hi:integer;
+begin
+  result := length(self) - 1;
+end;
+
+function tstringarray.rand:string;
+begin
+  result := self[random(self.hi)];
+end;
+
+procedure tstringarray.increaseLength;
+begin
+  setLength(self, length(self) + 1);
+end;
+
+procedure tstringarray.reset;
+begin
+  setLength(self, 0);
+end;
+
+function tstringarray.implode(pieces:tstringarray):string;
+var
+  i:Integer;
+begin
+  for i := 0 to high(pieces) do
+    result := result + pieces[i];
+end;
+
+procedure tstringarray.increaseLength;
+begin
+  setLength(self, length(self) + 1);
+end;
+
+procedure tstringarray.reset;
+begin
+  setLength(self, 0);
+end;
+
+procedure tstringarray.filterSize(maxLength:Integer);
+var
+  i:Integer;
+begin
+  for i := 0 to high(self) do
+    if (length(self[i]) < maxLength) then
+      self[i] := self[i];
+end;
+
+

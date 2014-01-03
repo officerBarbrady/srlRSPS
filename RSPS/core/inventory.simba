@@ -1,5 +1,11 @@
 {$include_once mouse.simba}
 
+(*
+  File name: inventory.simba
+  Description: Contains functions that return information about the inventory
+  Authors: Janilabo, Officer Barbrady
+*)
+
 type
   rsps_inventory = record(rsps_interface)
     slots:TboxArray;
@@ -8,6 +14,11 @@ type
 
 var
   inventory:rsps_inventory;
+
+(*
+  Author: Janilabo
+  Description: Returns the center of a box
+*)
 
 function rsps_inventory.boxCenter(bx: TBox): TPoint;
 begin
@@ -20,6 +31,12 @@ begin
   end;
   Result := Point(Round(bx.X1 + ((bx.X2 - bx.X1) div 2)), Round(bx.Y1 + ((bx.Y2 - bx.Y1) div 2)));
 end;
+
+(*
+  Author: Janilabo
+  Description: Returns an array of boxes based off the bounds of a box and the rows
+  and columns inputed
+*)
 
 function rsps_inventory.explodeBox(bx: TBox; rows, columns: integer): TBoxArray;
 var
@@ -71,16 +88,28 @@ begin
     SetLength(result, 0);
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Returns the inventory array of boxes to be used
+*)
+
 procedure rsps_inventory.setUp(b:tbox);
 begin
-  inventory.slots := explodeBox(b, 7, 4);
+  setLength(self.slots, 28);
+  self.slots := self.explodeBox(b, 7, 4);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Sets up the information to be used for the inventory based off
+  the server revision
+*)
 
 procedure rsps_inventory.init(rev:Integer);
 begin
   case rev of
     317..507:
-    with inventory do
+    with self do
     begin
       outline := 65536;
       setUp(IntToBox(563, 214, 720, 460));
@@ -88,7 +117,7 @@ begin
       name := '317 inventory';
     end;
     507..719:
-    with inventory do
+    with self do
     begin
       outline := 65536;
       setUp(IntToBox(563, 214, 720, 460));
@@ -96,51 +125,76 @@ begin
       name := '508 inventory';
     end;
     720..800:
-    with inventory do
+    with self do
     begin
       outline := 131072;
       setUp(IntToBox(568, 213, 717, 458));
-      bounds := intToBox(0, 0, 0, 0);
+      bounds := intToBox(568, 213, 717, 458);
       name := '724 inventory';
     end;
   end;
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Checks if a slot in the inventory is full
+*)
+
 function rsps_inventory.slotFull(slot:Integer):Boolean;
 var
   x, y:Integer;
 begin
-  exit(FindColor(x, y, inventory.outline, inventory.slots[slot].x1, inventory.slots[slot].y1, inventory.slots[slot].x2, inventory.slots[slot].y2));
+  exit(FindColor(x, y, self.outline, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2));
 end;
 
-function rsps_inventory.invCount:Integer;
+(*
+  Author: Officer Barbrady
+  Description: Returns how many items are in the inventory
+*)
+
+function rsps_inventory.count:Integer;
 var
   i:Integer;
 begin
- for i := 0 to high(inventory.slots) do
+ for i := 0 to high(self.slots) do
   begin
     if self.slotFull(i) then
       result := result + 1;
   end;
 end;
 
-function rsps_inventory.invFull:Boolean;
+(*
+  Author: Officer Barbrady
+  Description: Returns whether the inventory is full or not
+*)
+
+function rsps_inventory.full:Boolean;
 begin
-  exit(self.invCount = 28);
+  exit(self.count = 28);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Interacts with an item in the inventory
+*)
 
 procedure rsps_inventory.interactItem(slot:Integer; Button:Integer);
 begin
-  mouse(self.boxCenter(inventory.slots[slot]).x, self.boxCenter(inventory.slots[slot]).y, 0, 0, BUTTON);
+  mouse(self.boxCenter(self.slots[slot]).x, self.boxCenter(self.slots[slot]).y, 0, 0, BUTTON);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Searches for a bitmap in the inventory
+*)
 
 function rsps_inventory.searchInventoryBitmap(BMPSearch, tol:Integer;click, cont:Boolean):Boolean;
 var
   i, x, y:Integer;
 begin
-  for i := 0 to high(inventory.slots) do
+  for i := 0 to high(self.slots) do
   begin
-    If FindBitmaptoleranceIn(BMPsearch, x, y, inventory.slots[i].X1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2, tol) then
+    If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
     begin
       result := true;
       if click then
@@ -151,41 +205,96 @@ begin
   end;
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Counts number of bitmaps in the inventory
+*)
+
 function rsps_inventory.countInventoryBitmap(bmpSearch, tol:Integer):Integer;
 var
   i, x, y:Integer;
 begin
-  for i := 0 to high(inventory.slots) do
+  for i := 0 to high(self.slots) do
   begin
-    If FindBitmaptoleranceIn(BMPsearch, x, y, inventory.slots[i].X1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2, tol) then
+    If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
       result := result + 1;
   end;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Counts number of DTMs in the inventory
+*)
 
 function rsps_inventory.countInventoryDTM(DTMSearch:Integer):Integer;
 var
   i, x, y:Integer;
 begin
-  for i := 0 to high(inventory.slots) do
+  for i := 0 to high(self.slots) do
   begin
-    if FindDTM(DTMSearch, x, y, inventory.slots[i].x1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2) then
+    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
       result := result + 1;
   end;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Searches for a DTM in the inventory
+*)
 
 function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;click, cont:Boolean;button:Integer):Boolean;
 var
   I, x, y:Integer;
 begin
-  for i := 0 to high(inventory.slots) do
+  for i := 0 to high(self.slots) do
   begin
-    if FindDTM(DTMSearch, x, y, inventory.slots[i].x1, inventory.slots[i].y1, inventory.slots[i].x2, inventory.slots[i].y2) then
+    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
     begin
       result := true;
       if click then
         self.interactItem(i, left);
       if not cont then
         exit;
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Searches for a DTM in the inventory, clicks by defualt
+*)
+
+function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
+var
+  I, x, y:Integer;
+begin
+  for i := 0 to high(self.slots) do
+  begin
+    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    begin
+      result := true;
+      self.interactItem(i, left);
+      if not cont then
+        exit;
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Searches for a DTM in the inventory, clicks by defualt and exits
+*)
+
+function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
+var
+  I, x, y:Integer;
+begin
+  for i := 0 to high(self.slots) do
+  begin
+    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    begin
+      self.interactItem(i, left);
+      exit(true);
     end;
   end;
 end;

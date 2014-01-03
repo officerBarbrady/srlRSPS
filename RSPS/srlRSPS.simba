@@ -10,44 +10,43 @@
 
 {$include_once misc/simba.simba}
 
-function _rsps_server.init(revision:Integer;serverName:string):_rsps_server;
+procedure _rsps_server.init(revision:Integer;serverName:string);
 begin
-  rsps_inventory.init(revision);
   case revision of
     317..507:
     begin
-      result.version := revision;
-      result.name := serverName;
-      result.getUpText := @_317upText;
-      result.bankScreen := nil;
-      result.loggedIn := nil;
+      self.version := revision;
+      self.name := serverName;
+      self.getUpText := @_317upText;
+      self.bankScreen := nil;
+      self.loggedIn := nil;
     end;
     508..719:
     begin
-      result.version := revision;
-      result.name := serverName;
-      result.getUpText := @_508UpText;
-      result.bankScreen := nil;
-      result.loggedIn := nil;
+      self.version := revision;
+      self.name := serverName;
+      self.getUpText := @_508UpText;
+      self.bankScreen := nil;
+      self.loggedIn := nil;
     end;
     720..800:
     begin
-      result.version := revision;
-      result.name := serverName;
-      result.getUpText := @rs_getUpText;
-      result.bankScreen := @_724_BankScreen;
-      result.loggedIn := @_724_loggedin;
+      self.version := revision;
+      self.name := serverName;
+      self.getUpText := @rs_getUpText;
+      self.bankScreen := @_724_BankScreen;
+      self.loggedIn := @_724_loggedin;
       screen.init(revision);
-      rsps_inventory.init(revision);
+      inventory.init(revision);
     end;
   end;
 end;
 
-function _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:TStringArray):_rsps_server; overload;
+procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:TStringArray) overload;
 begin
-  result.version := rev;
-  result.name := serverName;
-  result.getupText := @uText;
-  result.getOptions := @options;
+  self.version := rev;
+  self.name := serverName;
+  self.getupText := @uText;
+  self.getOptions := @options;
 end;
 
