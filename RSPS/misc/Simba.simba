@@ -105,7 +105,7 @@ end;
   Description: overload for findColors, using box instead of integers
 *)
 
-function findColors(var tpa:tpointarray, color:integer;b:tbox):boolean;overload;
+function findColors(var tpa:tpointarray; color:integer;b:tbox):boolean;overload;
 begin
   result := findColors(tpa, color, b.x1, b.y1, b.x2, b.y2);
 end;

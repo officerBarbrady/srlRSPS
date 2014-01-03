@@ -105,7 +105,7 @@ end;
   the server revision
 *)
 
-procedure rsps_inventory.init(rev:Integer);
+procedure rsps_inventory.startUp(rev:Integer);
 begin
   case rev of
     317..507:
@@ -285,7 +285,7 @@ end;
   Description: Searches for a DTM in the inventory, clicks by defualt and exits
 *)
 
-function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
+function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;button:Integer):Boolean; overload;
 var
   I, x, y:Integer;
 begin

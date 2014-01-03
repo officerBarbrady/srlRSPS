@@ -21,7 +21,7 @@ begin
       self.bankScreen := nil;
       self.loggedIn := nil;
     end;
-    508..719:
+    507..719:
     begin
       self.version := revision;
       self.name := serverName;
@@ -36,8 +36,8 @@ begin
       self.getUpText := @rs_getUpText;
       self.bankScreen := @_724_BankScreen;
       self.loggedIn := @_724_loggedin;
-      screen.init(revision);
-      inventory.init(revision);
+      mainscreen.setup(revision);
+      inventory.startup(revision);
     end;
   end;
 end;

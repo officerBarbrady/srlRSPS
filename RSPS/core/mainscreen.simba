@@ -6,25 +6,26 @@ type
 
 var
   mainscreen:screen;
-procedure screen.init(rev:Integer);
+
+procedure screen.setup(rev:Integer);
 begin
   case rev of
     317..507:
-    with mainscreen do
+    with self do
     begin
       bounds := intToBox(0, 0, 0, 0); //TODO
       center := point(round(ms.x1/2), round(ms.y1/2));
       screen_name := '317 mainscreen';
     end;
     507..719:
-    with mainscreen do
+    with self do
     begin
       bounds := intToBox(0, 0, 0, 0); //TODO
       center := point(round(ms.x1/2), round(ms.y1/2));
       screen_name := '508 mainscreen';
     end;
     720..800:
-    with mainscreen do
+    with self do
     begin
       bounds := intToBox(0, 0, 514, 337);
       center := point(round(ms.x1/2), round(ms.y1/2));
