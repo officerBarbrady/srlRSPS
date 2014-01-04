@@ -12,7 +12,6 @@ type
     getupText:function:string;
     getOptions:function:TStringArray;
     bankScreen, loggedIn:function:boolean;
-    inventory:TBoxArray;
   end;
 
 type

@@ -95,8 +95,11 @@ end;
 
 procedure rsps_inventory.setUp(b:tbox);
 begin
+  Writeln('Starting setup procedure');
   setLength(self.slots, 28);
+  Writeln('Setting length');
   self.slots := self.explodeBox(b, 7, 4);
+  Writeln('Exploded box');
 end;
 
 (*
@@ -105,7 +108,7 @@ end;
   the server revision
 *)
 
-procedure rsps_inventory.startUp(rev:Integer);
+procedure rsps_inventory.Init(rev:Integer);
 begin
   case rev of
     317..507:
@@ -127,9 +130,13 @@ begin
     720..800:
     with self do
     begin
+      Writeln('starting!');
       outline := 131072;
+      Writeln('Outline set!');
       setUp(IntToBox(568, 213, 717, 458));
+      Writeln('Box array set!');
       bounds := intToBox(568, 213, 717, 458);
+      Writeln('Bounds set!');
       name := '724 inventory';
     end;
   end;

@@ -37,7 +37,9 @@ begin
       self.bankScreen := @_724_BankScreen;
       self.loggedIn := @_724_loggedin;
       mainscreen.setup(revision);
-      inventory.startup(revision);
+      writeln('mainscreen started!');
+      inventory.Init(revision);
+      writeln('Inventory started!');
     end;
   end;
 end;
