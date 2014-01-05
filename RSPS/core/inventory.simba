@@ -195,7 +195,7 @@ end;
   Description: Searches for a bitmap in the inventory
 *)
 
-function rsps_inventory.searchInventoryBitmap(BMPSearch, tol:Integer;click, cont:Boolean):Boolean;
+function rsps_inventory.searchBitmap(BMPSearch, tol:Integer;click, cont:Boolean):Boolean;
 var
   i, x, y:Integer;
 begin
@@ -217,7 +217,7 @@ end;
   Description: Counts number of bitmaps in the inventory
 *)
 
-function rsps_inventory.countInventoryBitmap(bmpSearch, tol:Integer):Integer;
+function rsps_inventory.countBitmap(bmpSearch, tol:Integer):Integer;
 var
   i, x, y:Integer;
 begin
@@ -233,7 +233,7 @@ end;
   Description: Counts number of DTMs in the inventory
 *)
 
-function rsps_inventory.countInventoryDTM(DTMSearch:Integer):Integer;
+function rsps_inventory.countDTM(DTMSearch:Integer):Integer;
 var
   i, x, y:Integer;
 begin
@@ -249,7 +249,7 @@ end;
   Description: Searches for a DTM in the inventory
 *)
 
-function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;click, cont:Boolean;button:Integer):Boolean;
+function rsps_inventory.searchDTM(DTMSearch:Integer;click, cont:Boolean;button:Integer):Boolean;
 var
   I, x, y:Integer;
 begin
@@ -271,7 +271,7 @@ end;
   Description: Searches for a DTM in the inventory, clicks by defualt
 *)
 
-function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
+function rsps_inventory.searchDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
 var
   I, x, y:Integer;
 begin
@@ -292,7 +292,7 @@ end;
   Description: Searches for a DTM in the inventory, clicks by defualt and exits
 *)
 
-function rsps_inventory.searchInventoryDTM(DTMSearch:Integer;button:Integer):Boolean; overload;
+function rsps_inventory.searchDTM(DTMSearch:Integer;button:Integer):Boolean; overload;
 var
   I, x, y:Integer;
 begin
@@ -300,7 +300,7 @@ begin
   begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
     begin
-      self.interactItem(i, left);
+      self.interactItem(i, button);
       exit(true);
     end;
   end;

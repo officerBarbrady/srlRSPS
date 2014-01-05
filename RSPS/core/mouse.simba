@@ -182,6 +182,11 @@ begin
   Wait(50 + Random(50));
 end;
 
+procedure Mouse(mousex, mousey: Integer);overload;
+begin
+  mouse(mousex, mousey, 0, 0, mouse_left);
+end;
+
 procedure MouseBoxEx(x1, y1, x2, y2: Integer; Dist,ClickType: Integer);
 var
   PT : TPoint;
