@@ -46,10 +46,9 @@ begin
   end;
 end;
 
-procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:TStringArray) overload;
+procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions) overload;
 begin
-  self.version := rev;
-  self.name := serverName;
+  self.init(rev, serverName);
   self.getupText := @uText;
   self.getOptions := @options;
 end;

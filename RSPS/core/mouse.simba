@@ -188,6 +188,11 @@ begin
   Wait(50+Random(50));
 end;
 
+(*
+  Author: ??
+  Description: Clicks the mouse
+*)
+
 procedure Mouse(mousex, mousey, ranx, rany: Integer; button: variant);
 begin
   MMouse(mousex, mousey, ranx, rany);
@@ -195,6 +200,11 @@ begin
   ClickMouse2(button);
   Wait(50 + Random(50));
 end;
+
+(*
+  Author: ??
+  Description: Clicks the mouse
+*)
 
 procedure Mouse(mousex, mousey: Integer; button: variant);overload;
 begin
@@ -204,6 +214,11 @@ begin
   Wait(50 + Random(50));
 end;
 
+(*
+  Author: ??
+  Description: Clicks the mouse (for choose options?_)
+*)
+
 procedure Mouse(mousex, mousey: Integer; button: fnct_actionOptions);overload;
 begin
   MMouse(mousex, mousey, 0, 0);
@@ -212,10 +227,20 @@ begin
   Wait(50 + Random(50));
 end;
 
-procedure Mouse(mousex, mousey: Integer);overload;
+(*
+  Author: Officer Barbrady
+  Description: Clicks the mouse, no randomness
+*)
+
+procedure Mouse(mousex, mousey: Integer)overload;
 begin
-  mouse(mousex, mousey, 0, 0, mouse_left);
+  Mouse(mousex, mousey, 0, 0, mouse_left);
 end;
+
+(*
+  Author: ??
+  Description: Clicks randomly in a box
+*)
 
 procedure MouseBoxEx(x1, y1, x2, y2: Integer; Dist,ClickType: Integer);
 var

@@ -5,19 +5,18 @@
   Authors: Officer Barbrady
 *)
 
-
-
-(*
-  Author: ??
-  Description: Gets system time
-*)
-
 const
   Time_Formal = 0;
   Time_Short  = 1;
   Time_Abbrev = 2;
   Time_Bare   = 3;
   Time_FStop  = 4;
+
+
+(*
+  Author: ??
+  Description: wait for an option
+*)
 
 function _rsps_server.WaitOptionMulti(S: TStringArray; TextType: string; Action: fnct_ActionOptions; Time: Integer): Boolean;
 var
@@ -33,14 +32,74 @@ begin
   end;
 end;
 
+(*
+  by Starblaster100 & Nielsie95 & Freddy1990, modified by Officer Barbrady
+  Description: Checks for uptext (multiple)
+*)
+function _rsps_server.IsUpTextMulti(Text: TStringArray): Boolean;
+var
+  TheText: string;
+  i: Integer;
+begin
+  TheText := self.getUpText;
+  for i := 0 to High(Text) do
+    if (Pos(Text[i], TheText) > 0) then
+      exit(true);
+end;
+
+(*
+  Author: ??
+  Description: waits for an option
+*)
+
 function _rsps_server.waitOptionMulti(S: TStringArray; Time: Integer): Boolean; overload;
 begin
   Result := self.waitOptionMulti(S, 'all', ClickLeft, Time);
 end;
 
 (*
-  by Rasta Magician, small edit by EvilChicken!
+  by Marpis edited by N1ke!
+  Description: Waits for a uptext to appear (multiple)
 *)
+
+function _rsps_server.waitUpTextMulti(S: TStringArray; Time: Integer): Boolean;
+var
+  T: Integer;
+begin
+  result := false;
+  T := GetSystemTime + Time;
+  while (GetSystemTime < T) do
+  begin
+    if (self.IsUpTextMulti(S)) then
+      exit(true)
+    else
+      Wait(20 + Random(20));
+  end;
+end;
+(*
+  by Simba Development Team.
+  Description: Checks for uptext
+*)
+function _rsps_server.IsUpText(UpText: string): Boolean;
+begin
+  Result := (Pos(UpText, self.GetUpText) > 0);
+end;
+
+(*
+  by Marpis edited by N1ke!
+  Description: Waits for a uptext to appear
+*)
+
+function _rsps_server.waitUptext(S: string; Time: Integer): Boolean;
+begin
+  Result := self.waitUptextMulti([S], Time);
+end;
+
+(*
+  Author: Rasta Magician, small edit by EvilChicken!
+  Description: waits until a function returns true
+*)
+
 function WaitFunc(Func: function: Boolean; WaitPerLoop, MaxTime: Integer): Boolean;
 var
   T: Integer;
@@ -54,10 +113,20 @@ begin
   end;
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: marks system time in a var
+*)
+
 procedure markTime(var t:Integer);
 begin
   t := getSystemTime;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns time from a mark
+*)
 
 function timeFromMark(i:Integer):Integer;
 begin
@@ -65,7 +134,8 @@ begin
 end;
 
 (*
-  by Zephyrsfury, Nava2 and Rasta Magician.
+  Author: Zephyrsfury, Nava2 and Rasta Magician.
+  Description: Converts ms to normal time
 *)
 function MsToTime(MS, TheType: Integer): string;
 var
@@ -91,7 +161,8 @@ begin
 end;
 
 (*
-  by Rasta Magician.
+  Author: Rasta Magician.
+  Description: Returns time in string (normal format)
 *)
 function TimeRunning: string;
 begin

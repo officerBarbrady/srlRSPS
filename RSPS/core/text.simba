@@ -5,26 +5,8 @@
   Authors: Officer Barbrady
 *)
 
-
-
-(*
-  Author: ??
-  Description: Gets system time
-*)
-
 {$I RSPS/misc/Simba.Simba}
 
-
-function containsText(checkText: String; text: TStringArray): boolean;
-var
-  theText: string;
-  i: Integer;
-begin
-  theText := checkText;
-  for i := 0 to high(text) do
-  if (pos(text[i], theText) > 0) then
-    exit(true);
-end;
 
 function DebugTPA(Points: TPointArray; BmpName: string): Boolean;
 var
@@ -69,6 +51,11 @@ begin
   Result := True;
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Returns uptext on Soulsplit
+*)
+
 function ss_getuptext:string;
 var
   texttpas, textatpa:t2dpointarray;
@@ -87,6 +74,11 @@ begin
   SortATPAFromFirstPointX(textatpa, Point(0, 0));
   result := getTextATPA(textatpa, 3, 'upchars07');
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns uptext on 525 servers
+*)
 
 function _525_getuptext():string;
 var
@@ -110,6 +102,11 @@ begin
 
   result := getTextATPA(textatpa, 5, 'upchars07');
 end;
+
+(*
+  Authors: Wizzup? & Narcle, modified by Officer Barbrady
+  Description: Returns uptext on 525 servers
+*)
 
 function _525_GetChooseOptions(): Array of TOptions;
 var
@@ -189,6 +186,11 @@ begin
   SetImageTarget(target);
   FreeBitmap(bmp);
 end;
+
+(*
+  Authors: Wizzup? & Narcle, Officer Barbrady
+  Description: Returns uptext on 525 servers
+*)
 
 function _317_GetChooseOptions(): Array of TOptions;
 var
@@ -280,6 +282,11 @@ begin
   FreeBitmap(bmp);
 end;
 
+(*
+  Authors: Wizzup? & Narcle
+  Description: Returns uptext on 527 servers
+*)
+
 Function _724_GetChooseOptions(): Array of TOptions;
 var
    B, BB, sB, BigBox: TBox;
@@ -362,6 +369,11 @@ begin
   FreeBitmap(bmp);
 end;
 
+(*
+  Authors: Wizzup? & Nava2 & N1ke!
+  Description: Function that chooses option
+*)
+
 function _rsps_server.ChooseOptionMulti(Texts: TStringArray; TextType: String; Action: fnct_ActionOptions): Boolean;
 var
    B: TBox;
@@ -415,15 +427,30 @@ begin
   end;
 end;
 
+(*
+  Authors: Wizzup? & N1ke!
+  Description: Chooses option (accepts array of string)
+*)
+
 function _rsps_server.chooseOptionMulti(Txt: TStringArray): Boolean; overload;
 begin
   Result := self.chooseOptionMulti(Txt, 'All', ClickLeft);
 end;
 
+(*
+  Authors: Wizzup?
+  Description: Chooses option
+*)
+
 function _rsps_server.chooseOption(Txt, TextType: string): Boolean;
 begin
   Result := self.chooseOptionMulti([Txt], TextType, ClickLeft);
 end;
+
+(*
+  Authors: Wizzup?
+  Description: Chooses option
+*)
 
 function _rsps_server.chooseOption(Txt: String): Boolean; overload;
 begin
@@ -431,8 +458,10 @@ begin
 end;
 
 (*
-  by Mutant Squirrle
+  Authors: Mutant Squirrle
+  Description:Types a key
 *)
+
 procedure TypeByte(k: Byte);
 begin
   {$IFDEF SMART}
@@ -445,8 +474,10 @@ begin
 end;
 
 (*
-  by SKy Scripter
+  Authors: SKy Scripter
+  Description: Sends the keys
 *)
+
 procedure TypeSend(Text: string; PressEnter: Boolean);
 var
   I: Integer;
@@ -460,6 +491,11 @@ begin
 end;
 
 (*
+  Authors: SKy Scripter
+  Description: Sends the keys
+*)
+
+(*
   by N1ke!
 *)
 procedure TypeSend(Text: string);overload;
@@ -468,8 +504,10 @@ begin
 end;
 
 (*
-  by Raymond
+  Authors: Raymond
+  Description: Sends the keys
 *)
+
 function LoadTextTPA(Text, Chars: string; var height: integer): TPointArray;
 var
   w: integer;
@@ -479,8 +517,10 @@ begin
 end;
 
 (*
-  by Raymond
+  Authors: Raymond
+  Description: Finds text off tpa
 *)
+
 function FindTextTPAEx(Color,Tol,xs,ys,xe,ye : integer;var x,y : integer; Txt, Chars : string; Action  :fnct_actionOptions ) : Boolean;
 var
   TextTPA,SearchTPA, Matches: TPointArray;
@@ -511,8 +551,10 @@ begin
 end;
 
 (*
-  by Raymond
+  Authors: Finds text (off tpa)
+  Description: Sends the keys
 *)
+
 function FindTextTPA(Color, Tol, xs, ys, xe, ye: integer; Txt, Chars: string; Action: fnct_actionOptions): Boolean;
 var
   x,y : integer;

@@ -4,6 +4,8 @@
   Authors: Officer Barbrady
 *)
 
+{$include_once globals.simba}
+
 
 
 (*
@@ -11,12 +13,37 @@
   Description: Gets system time
 *)
 
-Procedure rsps_SetangleHigh;
+Procedure rsps_setangleHigh();
 begin
   Keydown(VK_Up);
   wait(RandomRange(2000, 3000));
   KeyUp(VK_Up);
 end;
+                 {
+Procedure _rsps_server.loginPlayer(user, pass:string;userbox:tbox;boxcol, colcount:integer);
+var
+  tpa:TPointArray;
+begin
+  if self.loggedIn then
+    exit;
+  try
+    findColorsTolerance(tpa, boxcol, userbox, 15);
+  except
+  end;
+  if ((length(tpa) > colcount) and (not self.loggedIn)) then
+  begin
+    mouseboxex(userbox, mouse_left);
+    DeleteSpace(20);
+    TypeSend(user);
+    wait(200);
+    DeleteSpace(15);
+    TypeSend(passw);
+    if waitfunc(@self.loggedIn, 400, 9000) then
+      wait(3000);
+    if (not self.loggedIn) then
+      wait(4000);
+  end;
+end;       }
 
 function _724_loggedIn:boolean;
 begin
