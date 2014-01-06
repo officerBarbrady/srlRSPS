@@ -150,8 +150,10 @@ end;
 function rsps_inventory.slotFull(slot:Integer):Boolean;
 var
   x, y:Integer;
-begin
-  exit(FindColor(x, y, self.outline, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2));
+begin   //65536
+  if FindColor(x, y, self.outline, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) or
+    FindColor(x, y, 65536, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) then
+      result := true;
 end;
 
 (*

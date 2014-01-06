@@ -1,3 +1,10 @@
+(*
+  File name: globals.simba
+  Description: Contains globals for the include
+  Authors: Officer Barbrady
+*)
+
+
 
 const
   clRed = 255;
@@ -5,19 +12,21 @@ const
   mouse_move = 3;
   VK_ENTER = {$IFDEF LINUX}10{$ELSE}VK_RETURN{$ENDIF};
 
-type
-  _rsps_server = record
-    version:Integer;
-    name:string;
-    getupText:function:string;
-    getOptions:function:TStringArray;
-    bankScreen, loggedIn:function:boolean;
-  end;
+
 
 type
   TOptions = record
     Str: string;
     Bounds, BigBox: TBox;
+  end;
+
+type
+  _rsps_server = record
+    version:Integer;
+    name:string;
+    getupText:function:string;
+    getOptions:function:array of toptions;
+    bankScreen, loggedIn:function:boolean;
   end;
 
 type
@@ -35,4 +44,4 @@ var
   mouseSpeed:Integer;
   right:Integer = 0;
   left:Integer = 1;
-  username, password:string;
+  username, password, tt:string;

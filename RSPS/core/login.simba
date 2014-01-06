@@ -1,3 +1,16 @@
+(*
+  File name: Login.simba
+  Description: Contains procedures/functions to login
+  Authors: Officer Barbrady
+*)
+
+
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
+
 Procedure rsps_SetangleHigh;
 begin
   Keydown(VK_Up);

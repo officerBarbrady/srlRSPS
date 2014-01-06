@@ -1,3 +1,15 @@
+(*
+  File name: main.simba
+  Description: Contains functions for math calculations
+  Authors: Officer Barbrady
+*)
+
+
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
 
 function ArrInStr(arrS: TStringArray; str: string): Boolean;
 var
@@ -10,6 +22,11 @@ begin
       Exit;
   Result := False;
 end;
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
 
 function BoxClosestPoint(p : TPoint; b : TBox) : TPoint;
 var
@@ -44,6 +61,11 @@ begin
     9 : Result := point(b.x2,b.y2);
   end;
 end;
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
 
 function RandomPointBoxEx(p : TPoint; b : TBox; extraDist : integer) : TPoint;
 var

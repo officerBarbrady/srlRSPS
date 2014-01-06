@@ -1,3 +1,10 @@
+(*
+  File name: mainscreen.simba
+  Description: Contains functions that are called within simba, and extra overloaded
+  functions
+  Authors: Officer Barbrady
+*)
+
 type
   screen = record(rsps_interface)
     center:TPoint;
@@ -7,6 +14,10 @@ type
 var
   mainscreen:screen;
 
+(*
+  Author: Officer Barbrady
+  Description: Sets up the mainscreen coordinates
+*)
 procedure screen.setup(rev:Integer);
 begin
   case rev of

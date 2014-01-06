@@ -1,3 +1,17 @@
+(*
+  File name: Simba.simba
+  Description: Contains functions that are called within simba, and extra overloaded
+  functions
+  Authors: Officer Barbrady
+*)
+
+
+
+(*
+  Author: ??
+  Description: Gets system time
+*)
+
 {$I RSPS/misc/Simba.Simba}
 
 
@@ -74,7 +88,109 @@ begin
   result := getTextATPA(textatpa, 3, 'upchars07');
 end;
 
-function _508_GetChooseOptions(TextType: string): Array of TOptions;
+function _525_getuptext():string;
+var
+  texttpas, textatpa:t2dpointarray;
+  texttpa:tpointarray;
+  textcolors, tols:tintegerarray;
+  i:integer;
+begin
+  textcolors := [14211802, 14276876, 65280, 4231423, 28927, 12543, 255];
+  tols := [44, 40, 0, 0, 0, 0, 0];
+  for i := 0 to high(textcolors) do
+  begin
+    setLength(texttpas, (length(texttpas) + 1));
+    findColorsTolerance(texttpas[i], textcolors[i], 8, 6, 325, 300, tols[i]);
+  end;
+  texttpa := mergeAtpa(texttpas);
+  debugtpa(texttpa, 'bmp');
+  textatpa := splittpaex(texttpa, 1, 10);
+  filtertpasbetween(textatpa, 0, 4);
+  SortATPAFromFirstPointX(textatpa, Point(0, 0));
+
+  result := getTextATPA(textatpa, 5, 'upchars07');
+end;
+
+function _525_GetChooseOptions(): Array of TOptions;
+var
+   B, BB: TBox;
+   TPA, restpa, blacktpa, newtpa, merged: TPointArray;
+   ATPA, boxatpa, tempatpa, blackatpa, newatpa: T2DPointArray;
+   I, L, target, bmp, w, h: Integer;
+   BoxColors: TIntegerArray;
+begin
+  target := GetImageTarget;
+  GetClientDimensions(B.X2, B.Y2);
+  B := IntToBox(0, 0, B.X2-1, B.Y2-1);
+  //grey
+  BoxColors := [1845035, 6121839];
+  setLength(boxatpa, length(boxColors));
+  // find the option menu color
+  for i := 0 to high(boxcolors) do
+    FindColors(boxatpa[i], boxcolors[i], b);
+
+  tpa := mergeATPA(boxatpa);
+
+  //debugtpa(tpa, 'bmp');
+  // if soo small
+  If Length(tpa) < 100 Then
+    exit;
+  // form an atpa of the found menu
+  atpa := clusterTpa(tpa, 3);
+  filtertpasbetween(atpa, 0, 50);
+
+  // find the correct one that has the text
+  for i := 0 to High(ATPA) do
+  begin
+    B := GetTPABounds(ATPA[i]);
+    if ((B.x2-B.x1) > 95) and ((B.y2-B.y1) > 18) then
+      Break
+    else
+      B := IntToBox(0, 0, 0, 0);
+  end;
+  If (B.x2 = 0) then
+    exit;
+  findColors(blacktpa, 0, b);
+  if (length(blacktpa) < 0) then
+    exit;
+  tpa := mergeatpa([blacktpa, tpa]);
+
+
+  // get the points that are not the menu color (the text)
+  ReturnPointsNotInTPAWrap(tpa, b, resTPA);
+ // debugtpa(restpa, 'bmp');
+  bmp := CreateBitmap(b.X2-B.X1+2, b.Y2-b.Y1+2);
+  OffsetTPA(restpa, Point(-B.X1, -B.Y1));
+  FastDrawClear(bmp, 0);
+  // draw red in the text
+  DrawTPABitmap(bmp, restpa, clRed);//Text
+  GetbitmapSize(bmp, w, h);
+  settargetbitmap(bmp);
+  SetLength(newatpa, H div 15);
+  // find the red in the bitmap
+  for i := 0 to High(newatpa) do
+    FindColorsTolerance(newatpa[i], 255, 0, 0+i*15,  W-1, 14+i*15, 0);
+  L := High(newatpa);
+  SortATPAFromFirstPointY(newatpa, Point(w div 2,0));
+  SetArrayLength(Result, Length(newatpa));
+  Result[0].BigBox := b;
+  for i := 0 to high(newatpa) do
+  begin
+    TPA := newatpa[i];
+    tempatpa := SplitTPAEx(TPA, 1, 10); // Split one into characters
+    SortATPAFromFirstPointX(tempatpa, Point(0, 0));
+    //pass to ocr
+    Result[i].Str := GetTextATPA(tempatpa, 4, 'UpChars07'); //Writeln(Result[i].Str);
+    BB := GetTPABounds(newatpa[i]);
+    Result[i].Bounds := IntToBox(BB.X1+B.X1, BB.Y1+B.Y1, BB.X2+B.X1, BB.Y2+B.Y1);
+    setlength(tempatpa,0);
+    setlength(TPA,0);
+  end;
+  SetImageTarget(target);
+  FreeBitmap(bmp);
+end;
+
+function _317_GetChooseOptions(): Array of TOptions;
 var
    B, BB: TBox;
    TPA, restpa, blacktpa, newtpa, merged: TPointArray;
@@ -164,7 +280,7 @@ begin
   FreeBitmap(bmp);
 end;
 
-Function _724_GetChooseOptions(TextType: string): Array of TOptions;
+Function _724_GetChooseOptions(): Array of TOptions;
 var
    B, BB, sB, BigBox: TBox;
    TPA, TPA1, TPA2, tpa5: TPointArray;
@@ -246,7 +362,7 @@ begin
   FreeBitmap(bmp);
 end;
 
-function ChooseOptionMulti(Texts: TStringArray; TextType: String; Action: fnct_ActionOptions): Boolean;
+function _rsps_server.ChooseOptionMulti(Texts: TStringArray; TextType: String; Action: fnct_ActionOptions): Boolean;
 var
    B: TBox;
    i, H, x, R: Integer;
@@ -254,7 +370,7 @@ var
    Options: array of TOptions;
 begin
   Result := False;
-  Options := _724_getChooseOptions(TextType);
+  Options := self.getOptions;
   if (Length(Options) < 1) then
     Exit;
   H := High(Options);
@@ -262,7 +378,6 @@ begin
   begin
     if ArrInStr(Texts, Options[i].Str) then
     begin
-      Writeln('found');
       Result := True;
       B := Options[i].Bounds;
       GetMousePos(T.x, T.y);
@@ -300,29 +415,19 @@ begin
   end;
 end;
 
-function chooseOptionMulti(Txt: TStringArray): Boolean; overload;
+function _rsps_server.chooseOptionMulti(Txt: TStringArray): Boolean; overload;
 begin
-  Result := ChooseOptionMulti(Txt, 'All', ClickLeft);
+  Result := self.chooseOptionMulti(Txt, 'All', ClickLeft);
 end;
 
-function chooseOption(Txt, TextType: string): Boolean;
+function _rsps_server.chooseOption(Txt, TextType: string): Boolean;
 begin
-  Result := ChooseOptionMulti([Txt], TextType, ClickLeft);
+  Result := self.chooseOptionMulti([Txt], TextType, ClickLeft);
 end;
 
-function chooseOption(Txt: String): Boolean; overload;
+function _rsps_server.chooseOption(Txt: String): Boolean; overload;
 begin
-  Result := ChooseOptionMulti([Txt], 'All', ClickLeft);
-end;
-
-function _317upText:string;
-begin
-  result := '5';
-end;
-
-function _508upText:string;
-begin
-  result := '5';
+  Result := self.chooseOptionMulti([Txt], 'All', ClickLeft);
 end;
 
 (*

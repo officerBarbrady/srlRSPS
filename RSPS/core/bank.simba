@@ -1,4 +1,16 @@
+(*
+  File name: Bank.simba
+  Description: Bank functions
+  Authors: Officer Barbrady
+*)
+
+
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if finds bank text
+*)
 function _724_BankScreen: Boolean;
 begin
-  result := findTextTPA(4106994, 20, 20, 22, 400, 45, 'Bank', upCharsEx, nothing);
+  exit(findTextTPA(4106994, 20, 20, 22, 400, 45, 'ank', upCharsEx, nothing));
 end;

@@ -18,7 +18,8 @@ begin
     begin
       self.version := revision;
       self.name := serverName;
-      self.getUpText := @_317upText;
+     // self.getUpText := nil;
+      self.getOptions := @_317_getChooseOptions;
       self.bankScreen := nil;
       self.loggedIn := nil;
     end;
@@ -26,7 +27,8 @@ begin
     begin
       self.version := revision;
       self.name := serverName;
-      self.getUpText := @_508UpText;
+      self.getUpText := @_525_getuptext;
+      self.getOptions := @_525_GetChooseOptions;
       self.bankScreen := nil;
       self.loggedIn := nil;
     end;
@@ -37,10 +39,9 @@ begin
       self.getUpText := @rs_getUpText;
       self.bankScreen := @_724_BankScreen;
       self.loggedIn := @_724_loggedin;
+      self.getOptions := @_724_getChooseOptions;
       mainscreen.setup(revision);
-      writeln('mainscreen started!');
       inventory.Init(revision);
-      writeln('Inventory started!');
     end;
   end;
 end;
