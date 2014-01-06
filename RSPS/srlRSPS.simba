@@ -12,6 +12,7 @@
 
 procedure _rsps_server.init(revision:Integer;serverName:string);
 begin
+  mouseSpeed := 20;
   case revision of
     317..507:
     begin

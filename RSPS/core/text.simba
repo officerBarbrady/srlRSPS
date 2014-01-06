@@ -252,18 +252,9 @@ procedure TypeSend(Text: string; PressEnter: Boolean);
 var
   I: Integer;
 begin
-  if (PressEnter) then
-    TypeByte(VK_ENTER);
 
   for i := 1 to Length(Text) do
-  begin
-    {$IFDEF SIMBAMAJOR980}
-    SendKeys(Text[i], 40 + Random(40));
-    {$ELSE}
-    SendKeys(Text[i], 30 + Random(30), 30 + Random(30));
-    {$ENDIF}
-    Wait(40 + Random(40));
-  end;
+    sendKeys(text[i], random(30), random(30));
 
   if (PressEnter) then
     TypeByte(VK_ENTER);
