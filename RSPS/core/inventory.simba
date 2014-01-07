@@ -95,11 +95,7 @@ end;
 
 procedure rsps_inventory.setUp(b:tbox);
 begin
-  Writeln('Starting setup procedure');
-  setLength(self.slots, 28);
-  Writeln('Setting length');
   self.slots := self.explodeBox(b, 7, 4);
-  Writeln('Exploded box');
 end;
 
 (*
@@ -130,13 +126,9 @@ begin
     720..800:
     with self do
     begin
-      Writeln('starting!');
       outline := 131072;
-      Writeln('Outline set!');
       setUp(IntToBox(568, 213, 717, 458));
-      Writeln('Box array set!');
       bounds := intToBox(568, 213, 717, 458);
-      Writeln('Bounds set!');
       name := '724 inventory';
     end;
   end;
@@ -151,6 +143,7 @@ function rsps_inventory.slotFull(slot:Integer):Boolean;
 var
   x, y:Integer;
 begin   //65536
+  result := false;
   if FindColor(x, y, self.outline, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) or
     FindColor(x, y, 65536, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) then
       result := true;
@@ -165,7 +158,8 @@ function rsps_inventory.count:Integer;
 var
   i:Integer;
 begin
- for i := 0 to high(self.slots) do
+  result := 0;
+  for i := 0 to high(self.slots) do
   begin
     if self.slotFull(i) then
       result := result + 1;
@@ -179,6 +173,7 @@ end;
 
 function rsps_inventory.full:Boolean;
 begin
+  result := false;
   exit(self.count = 28);
 end;
 
@@ -201,6 +196,7 @@ function rsps_inventory.searchBitmap(BMPSearch, tol:Integer;click, cont:Boolean)
 var
   i, x, y:Integer;
 begin
+  result := false;
   for i := 0 to high(self.slots) do
   begin
     If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
@@ -223,6 +219,7 @@ function rsps_inventory.countBitmap(bmpSearch, tol:Integer):Integer;
 var
   i, x, y:Integer;
 begin
+
   for i := 0 to high(self.slots) do
   begin
     If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
@@ -239,6 +236,7 @@ function rsps_inventory.countDTM(DTMSearch:Integer):Integer;
 var
   i, x, y:Integer;
 begin
+  result := 0;
   for i := 0 to high(self.slots) do
   begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
@@ -255,6 +253,7 @@ function rsps_inventory.searchDTM(DTMSearch:Integer;click, cont:Boolean;button:I
 var
   I, x, y:Integer;
 begin
+  result := false;
   for i := 0 to high(self.slots) do
   begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
@@ -277,6 +276,7 @@ function rsps_inventory.searchDTM(DTMSearch:Integer;cont:Boolean;button:Integer)
 var
   I, x, y:Integer;
 begin
+  result := false;
   for i := 0 to high(self.slots) do
   begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
@@ -298,6 +298,7 @@ function rsps_inventory.searchDTM(DTMSearch:Integer;button:Integer):Boolean; ove
 var
   I, x, y:Integer;
 begin
+  result := false;
   for i := 0 to high(self.slots) do
   begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
