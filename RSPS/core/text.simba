@@ -63,7 +63,7 @@ var
   textcolors:tintegerarray;
   i:integer;
 begin
-  textcolors := [16777215, 65535, 65280, 4231423, 28927, 12543, 255];
+  textcolors := [16777215, 16776960, 65535, 65280, 4231423, 28927, 12543, 255];
   for i := 0 to high(textcolors) do
   begin
     setLength(texttpas, (length(texttpas) + 1));
@@ -261,7 +261,7 @@ begin
   SetLength(newatpa, H div 16);
   // find the red in the bitmap
   for i := 0 to High(newatpa) do
-    FindColorsTolerance(newatpa[i], 255, 0, 2+i*16,  W-1, 15+i*16, 0);
+    FindColorsTolerance(newatpa[i], 255, 0, 2+i*15,  W-1, 15+i*15, 0);
   L := High(newatpa);
   SortATPAFromFirstPointY(newatpa, Point(w div 2,0));
   SetArrayLength(Result, Length(newatpa));

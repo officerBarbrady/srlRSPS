@@ -5,7 +5,6 @@
 *)
 
 
-
 const
   clRed = 255;
   clPurple = 69;
@@ -21,11 +20,19 @@ type
   end;
 
 type
+  chatOption = record
+    text: string;
+    bounds: TBox;
+  end;
+
+type
   _rsps_server = record
     version:Integer;
     name:string;
     getupText:function:string;
+    getChat:function:tstringarray;
     getOptions:function:array of toptions;
+    getNpcText:function: array of chatOption;
     bankScreen, loggedIn:function:boolean;
   end;
 

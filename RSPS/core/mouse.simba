@@ -1,7 +1,7 @@
 (*
   File name: Mouse.simba
   Description: Mouse procedures and functions
-  Authors: Officer Barbrady
+  Authors: Benland100, Officer Barbrady
 *)
 
 {$include_once math.simba}

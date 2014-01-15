@@ -1,0 +1,120 @@
+
+//{$I RSPS/core/mouse.Simba}
+
+function ss_getchat(line:integer):string;
+var
+  texttpas, textatpa:t2dpointarray;
+  texttpa:tpointarray;
+  textcolors:tintegerarray;
+  i:integer;
+begin
+  setLength(result, 8);
+  textcolors := [16711680, 0, 255, 16711935, 16776960, 16777215, 8388736];
+  setLength(texttpas, length(textcolors));
+    for i := 0 to high(textcolors) do
+      findColors(texttpas[i], textcolors[i], 7, 402 + (line * 14), 495, 413 + (line * 14));
+    texttpa := mergeAtpa(texttpas);
+    textatpa := splittpaex(texttpa, 1, 10);
+    SortATPAFromFirstPointX(textatpa, Point(0, 0));
+    result := getTextATPA(textatpa, 3, 'smallchars07');
+end;
+
+function ss_getchat:tstringarray;overload;
+begin
+  result := ['nil'];
+end;
+
+function _317_getchat(line:integer;colors:tintegerArray):string;
+var
+  texttpas, textatpa:t2dpointarray;
+  texttpa:tpointarray;
+  textcolors:tintegerarray;
+  i:integer;
+begin
+  setLength(result, 8);
+  setLength(texttpas, length(colors));
+  for i := 0 to high(colors) do
+    findColors(texttpas[i], colors[i], 6, 343 + (line * 14), 495, 361 + (line * 14));
+  texttpa := mergeAtpa(texttpas);
+  textatpa := splittpaex(texttpa, 1, 10);
+  filtertpasbetween(textatpa, 0, 1);
+  SortATPAFromFirstPointX(textatpa, Point(0, 0));
+  result := getTextATPA(textatpa, 3, 'smallchars07');
+end;
+
+function _rsps_server.getChatText(line:integer):string;
+var
+  i:integer;
+begin
+  result := _317_getChat(line, [0, 128, 255, 16711680, 8650752]);
+end;
+
+function _rsps_server.getChatText:tstringarray; overload;
+var
+  i:integer;
+begin
+  setLength(result, 8);
+  for i := 0 to 7 do
+    result[i] := self.getChatText(i);
+end;
+
+function ss_getNpcText:array of chatOption;
+var
+  texttpas, textatpa, atpa:t2dpointarray;
+  texttpa:tpointarray;
+  textcolors:tintegerarray;
+  i:integer;
+begin
+  textcolors := [128, 0, 16711680, 16777215];
+  setLength(texttpas, length(textcolors));
+  for i := 0 to high(textcolors) do
+    findColors(texttpas[i], textcolors[i], 93, 399, 402, 526);
+  texttpa := mergeAtpa(texttpas);
+  atpa := splittpaex(texttpa, 20, 1);
+  if (length(atpa) <= 4) then
+    TPAtoATPAExWrap(texttpa, 190, 13, atpa);
+  //debugatpa(atpa, 'bmp');
+  writeln(length(atpa));
+  setLength(result, length(atpa));
+  if (length(atpa) = 0) then
+    exit;
+  for i := 0 to high(atpa) do
+  begin
+    textatpa := splittpaex(atpa[i], 1, 10);
+    SortATPAFromFirstPointX(textatpa, Point(0, 0));
+    result[i].text := getTextATPA(textatpa, 3, 'charsnpc07');
+    result[i].bounds := getTpabounds(atpa[i]);
+  end;
+end;
+
+function _rsps_server.clickNpcText(text:string):boolean;
+var
+  opt:array of chatOption;
+  i:integer;
+begin
+  opt := self.getNpcText;
+  for i := 0 to high(opt) do
+    if (pos(text, opt[i].text) > 0) then
+    begin
+      mouse(opt[i].bounds.x1, opt[i].bounds.y1);
+      exit(true);
+    end;
+end;
+
+function _rsps_server.clickNpcText(text:tstringarray):boolean; overload;
+var
+  i:integer;
+begin
+  for i := 0 to high(text) do
+    if self.clickNpcText(text[i]) then
+      exit(true);
+end;
+
+
+
+
+
+
+
+
+

@@ -7,11 +7,21 @@
 {$include_once core/timing.simba}
 {$include_once core/mainscreen.simba}
 {$include_once core/bank.simba}
+{$include_once core/chatbox.simba}
 
 {$include_once misc/simba.simba}
 
+
+const
+  revision = 1;
+
+
+
 procedure _rsps_server.init(revision:Integer;serverName:string);
+var
+  t:integer;
 begin
+  t := getsystemtime;
   mouseSpeed := 20;
   case revision of
     317..507:
@@ -20,6 +30,9 @@ begin
       self.name := serverName;
      // self.getUpText := nil;
       self.getOptions := @_317_getChooseOptions;
+     // self.getNpcText := @_317_getNpcText;
+      self.getChat := @_317_getChat;
+      self.getNpcText := nil;
       self.bankScreen := nil;
       self.loggedIn := nil;
     end;
@@ -44,12 +57,40 @@ begin
       inventory.Init(revision);
     end;
   end;
+  Writeln('SRL RSPS.',revision, ' ' , serverName, ' compiled in ' , (getSystemTime - t) , ' ms');
 end;
 
-procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions) overload;
+procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions;npctext:function:array of chatoption;chat:function:tstringarray) overload;
+var
+  t:integer;
 begin
+  t := getsystemtime;
   self.init(rev, serverName);
   self.getupText := @uText;
   self.getOptions := @options;
+  self.getNpcText := @npctext;
+  self.getChat := @chat;
+end;
+
+procedure _rsps_server.init(serverName:string) overload;
+var
+  t:integer;
+begin
+  t := getsystemtime;
+  if (lowercase(serverName) = 'soulsplit') then
+    self.init(525, 'Soulsplit', @ss_GetUptext, @_317_getChooseOptions, @ss_getNpcText, @ss_getchat);
+  else
+  begin
+    Writeln('Server ' , serverName , ' is not supported!');
+    terminateScript;
+  end;
+end;
+
+function _rsps_server.update:boolean;
+begin
+end;
+
+function _rsps_server.revision:integer;
+begin
 end;
 
