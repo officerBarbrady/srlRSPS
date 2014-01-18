@@ -1,0 +1,203 @@
+(*
+  File name: mainscreen.simba
+  Description: Contains functions that have to do with minimap stuff
+  Authors: Officer Barbrady
+*)
+
+type
+  minimap = record(rsps_interface)
+    center:TPoint;
+    screen_name:string;
+    lastHealth, lastPrayer, lastRun, compassColor:integer;
+    healthBox, prayerBox, runBox, compassBox, runBounds:tbox;
+    textColors:TIntegerarray;
+    fontName:string;
+  end;
+
+var
+  map:minimap;
+
+(*
+  Author: Officer Barbrady
+  Description: Sets up the minimap coordinates/info
+*)
+
+procedure minimap.setup(rev:Integer);
+begin
+  case rev of
+    317..507:
+    with self do
+    begin
+      bounds := intToBox(0, 0, 0, 0); //TODO
+      center := point(round(ms.x1/2), round(ms.y1/2));
+      self.healthBox := intToBox(0, 0, 0, 0);
+      self.prayerBox := intToBox(0, 0, 0, 0);
+      self.runBox := intToBox(0, 0, 0, 0);
+      self.compassBox := intToBox(0, 0, 0, 0);
+      screen_name := '317 mainscreen';
+    end;
+    507..719:
+    with self do
+    begin
+      bounds := intToBox(0, 0, 0, 0); //TODO
+      center := point(round(ms.x1/2), round(ms.y1/2));
+      self.healthBox := intToBox(0, 0, 0, 0);
+      self.prayerBox := intToBox(0, 0, 0, 0);
+      self.runBox := intToBox(0, 0, 0, 0);
+      self.compassBox := intToBox(0, 0, 0, 0);
+      screen_name := '508 mainscreen';
+    end;
+    720..800:
+    with self do
+    begin
+      bounds := intToBox(0, 0, 514, 337);
+      center := point(round(ms.x1/2), round(ms.y1/2));
+      self.healthBox := intToBox(0, 0, 0, 0);
+      self.prayerBox := intToBox(0, 0, 0, 0);
+      self.runBox := intToBox(0, 0, 0, 0);
+      self.compassBox := intToBox(0, 0, 0, 0);
+      screen_name := '724 mainscreen';
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets text from minimap icons
+*)
+
+function minimap.getText(b:tbox;colors:tintegerArray;font:string):integer;
+var
+  texttpas, textatpa:t2dpointarray;
+  texttpa:tpointarray;
+  i:integer;
+begin
+  setLength(texttpas, length(colors));
+  for i := 0 to high(colors) do
+    findColors(texttpas[i], colors[i], b.x1, b.y1, b.x2, b.y2);
+  texttpa := mergeAtpa(texttpas);
+  textatpa := splittpaex(texttpa, 1, 10);
+  filtertpasbetween(textatpa, 0, 1);
+  SortATPAFromFirstPointX(textatpa, Point(0, 0));
+  try
+    result := StrToInt(getTextATPA(textatpa, 3, font));
+  except
+    result := -1;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets health text from minimap
+*)
+
+function minimap.getHealth:integer;
+begin
+  result := self.getText(map.healthBox, [65280, 501500, 65535, 855541], 'statchars07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets prayer text from minimap
+*)
+
+function minimap.getPrayer:integer;
+begin
+  result := self.getText(map.prayerBox, [65280, 501500, 65535, 855541], 'statchars07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets run text from minimap
+*)
+
+function minimap.getRun:integer;
+begin
+  result := self.getText(map.runBox, [65280, 501500, 65535, 855541], 'statchars07');
+end;
+
+(*
+  by Narcle & Flight
+  Description: Gets the compass angle in radians
+*)
+Function minimap.getCompassRadians: Extended;
+var
+  TPA: TPointArray;
+  T: TPoint;
+begin
+  with self.compassBox do
+    FindColorsSpiralTolerance(T.x, T.y, TPA, self.compassColor, x1, y1, x2, y2, 0);
+  if Length(TPA) < 1 then
+   Exit;
+  T := MiddleTPA(TPA);
+  Result := ArcTan2(-(T.Y - 24), T.X - 543) + Radians(90);
+  Result := fixRad(Result - Pi);
+end;
+
+(*
+  by Wizzup?
+  Description: Gets the compass angle in radians
+*)
+
+function minimap.GetCompassAngleDegrees: Extended;
+begin
+  Result := Degrees(self.getCompassRadians());
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if run is on
+*)
+
+function minimap.runOn:boolean;
+begin
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if run is off
+*)
+
+function minimap.runOff:boolean;
+begin
+  result := not runOn;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Turns run on or off
+*)
+
+procedure minimap.setRun(turnOn:boolean);
+begin
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Turns run on or off given the run is above a certain level
+*)
+
+procedure minimap.setRun(turnOn:boolean;energy:integer) overload;
+begin
+end;
+
+function minimap.getDots:integer;
+begin
+end;
+
+procedure minimap.toMainscreen;
+begin
+end;
+
+
+procedure minimap.update;
+begin
+  //self.lastHealth := self.getHealth;
+ // self.lastPrayer := self.getPrayer;
+ // self.lastRun := self.getRun;
+end;
+
+
+
+
+

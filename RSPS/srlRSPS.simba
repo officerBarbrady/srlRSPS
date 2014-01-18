@@ -8,12 +8,13 @@
 {$include_once core/mainscreen.simba}
 {$include_once core/bank.simba}
 {$include_once core/chatbox.simba}
+{$include_once core/minimap.simba}
 
 {$include_once misc/simba.simba}
 
 
 const
-  revision = 21;
+  revision = 1;
 
 
 
@@ -35,6 +36,7 @@ begin
       self.getNpcText := nil;
       self.bankScreen := nil;
       self.loggedIn := nil;
+      map.setUp(revision);
     end;
     507..719:
     begin
@@ -44,6 +46,7 @@ begin
       self.getOptions := @_525_GetChooseOptions;
       self.bankScreen := nil;
       self.loggedIn := nil;
+      map.setUp(revision);
     end;
     720..800:
     begin
@@ -55,6 +58,7 @@ begin
       self.getOptions := @_724_getChooseOptions;
       mainscreen.setup(revision);
       inventory.Init(revision);
+      map.setUp(revision);
     end;
   end;
   Writeln('SRL RSPS.',revision, ' ' , serverName, ' compiled in ' , (getSystemTime - t) , ' ms');
@@ -78,7 +82,18 @@ var
 begin
   t := getsystemtime;
   if (lowercase(serverName) = 'soulsplit') then
+  begin
     self.init(525, 'Soulsplit', @ss_GetUptext, @_317_getChooseOptions, @ss_getNpcText, @ss_getchat);
+    map.healthBox := intToBox(721, 85, 736, 95);
+    map.prayerBox := intToBox(737, 124, 751, 135);
+    map.runBox := intToBox(734, 163, 753, 174);
+    map.compassBox := intToBox(522, 58, 563, 98);
+    map.runbounds := intToBox(705, 150, 729, 176);
+    map.compassColor := 1911089;
+    map.fontName := 'statchars07';
+    //screen.bounds := intToBox(4, 57, 515, 391);
+
+  end
   else
   begin
     Writeln('Server ' , serverName , ' is not supported!');
