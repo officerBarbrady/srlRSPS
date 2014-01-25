@@ -18,14 +18,15 @@ var
   Author: Officer Barbrady
   Description: Sets up the mainscreen coordinates
 *)
+
 procedure screen.setup(rev:Integer);
 begin
   case rev of
     317..507:
     with self do
     begin
-      bounds := intToBox(0, 0, 0, 0); //TODO
-      center := point(round(ms.x1/2), round(ms.y1/2));
+      bounds := intToBox(0, 0, 514, 337);
+      center := point(248, 182);
       screen_name := '317 mainscreen';
     end;
     507..719:
@@ -38,9 +39,96 @@ begin
     720..800:
     with self do
     begin
-      bounds := intToBox(0, 0, 514, 337);
+      bounds := intToBox(0, 0, 514, 337); //TODO
       center := point(round(ms.x1/2), round(ms.y1/2));
       screen_name := '724 mainscreen';
     end;
   end;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Finds object on the mainscreen, uses multiple colors for objects
+  that can be different colors. Uses the _rsps_server type to avoid having
+  to take an extra arguement for the server var (so it can just use
+  self.waitUpTextMulti and self.waitOptionMulti)
+*)
+
+function _rsps_server.findObject(Colors, tols:TintegerArray;hue,sat:TExtendedArray;dist, minLength:integer;uptext:tstringarray;Useuptext,rightClick:boolean):boolean;
+var
+  mtpas, matpa:t2dpointarray;
+  mtpa:tpointarray;
+  i, x, y, cts:integer;
+  bx:tbox;
+  dx, dy, dx2, dy2:integer;
+begin
+  cts := GetColorToleranceSpeed;
+  ColorToleranceSpeed(2);
+  setLength(mtpas, length(colors));
+  for i := 0 to high(Colors) do
+  begin
+    SetColorSpeed2Modifiers(hue[i], sat[i]);
+    findColorsTolerance(mtpas[i], colors[i], mainscreen.bounds, tols[i]);
+  end;
+  ColorToleranceSpeed(cts);
+  SetColorSpeed2Modifiers(0.02, 0.02);
+  if (length(mtpas) > 1) then
+    mtpa := mergeAtpa(matpa)
+  else
+    mtpa := mtpas[0];
+  if (length(mtpa) > 0) then
+  begin
+    matpa := clustertpa(mtpa, dist);
+    filtertpasbetween(matpa, 0, minLength);
+    SortATPAFromFirstpoint(matpa, mainscreen.center);
+    for i := 0 to high(matpa) do
+    begin
+      if useUptext then
+        if (self.waitUpTextMulti(uptext, 150)) then
+          continue
+        else
+          writeln('Uptext ' , uptext, ' not found');
+      MiddleTPAEx(matpa[i], x, y);
+      if rightClick then
+      begin
+        Mouse(x, y, 0, 0, Mouse_right);
+        if self.waitOptionMulti(['ttack','tack'], 1200) then
+          exit(true);
+      end else
+      begin
+        mouse(x, y);
+        exit(true);
+      end;
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Finds object on the mainscreen, 1 color
+*)
+
+function _rsps_server.findObject(Color, tol:integer;hue,sat:Extended;dist, minLength:integer;uptext:tstringarray;Useuptext,rightClick:boolean):boolean; overload;
+begin
+  result := self.findObject([color], [tol], [hue], [sat], dist, minLength, uptext, useUptext, rightClick);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Finds object on the mainscreen, 1 color. Simplified version,
+  do not need to specify, distance, min length, or whether to right click
+*)
+
+function _rsps_server.findObject(Color, tol:integer;hue,sat:Extended;uptext:tstringarray):boolean; overload;
+begin
+  result := self.findObject([color], [tol], [hue], [sat], 3, 60, uptext, true, false);
+end;
+
+
+
+
+
+
+
+
+

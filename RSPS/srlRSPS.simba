@@ -12,9 +12,14 @@
 
 {$include_once misc/simba.simba}
 
+{$IFDEF SMART}
+  {$include_once core/smart/smart.simba}
+{$ENDIF}
+{$f+}
+
 
 const
-  revision = 1;
+  build = 1;
 
 
 
@@ -29,31 +34,29 @@ begin
     begin
       self.version := revision;
       self.name := serverName;
-     // self.getUpText := nil;
+      self.getUpText := nil;
       self.getOptions := @_317_getChooseOptions;
      // self.getNpcText := @_317_getNpcText;
       self.getChat := @_317_getChat;
       self.getNpcText := nil;
-      self.bankScreen := nil;
       self.loggedIn := nil;
       map.setUp(revision);
+      mainscreen.setup(revision);
     end;
-    507..719:
+    507..712:
     begin
       self.version := revision;
       self.name := serverName;
       self.getUpText := @_525_getuptext;
       self.getOptions := @_525_GetChooseOptions;
-      self.bankScreen := nil;
       self.loggedIn := nil;
       map.setUp(revision);
     end;
-    720..800:
+    713..740:
     begin
       self.version := revision;
       self.name := serverName;
       self.getUpText := @rs_getUpText;
-      self.bankScreen := @_724_BankScreen;
       self.loggedIn := @_724_loggedin;
       self.getOptions := @_724_getChooseOptions;
       mainscreen.setup(revision);
@@ -64,7 +67,7 @@ begin
   Writeln('SRL RSPS.',revision, ' ' , serverName, ' compiled in ' , (getSystemTime - t) , ' ms');
 end;
 
-procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions;npctext:function:array of chatoption;chat:function:tstringarray) overload;
+procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions;npctext:function:array of chatoption;chat:function:tstringarray;log:function:boolean) overload;
 var
   t:integer;
 begin
@@ -73,6 +76,7 @@ begin
   self.getupText := @uText;
   self.getOptions := @options;
   self.getNpcText := @npctext;
+  self.loggedIn := @log;
   self.getChat := @chat;
 end;
 
@@ -83,7 +87,7 @@ begin
   t := getsystemtime;
   if (lowercase(serverName) = 'soulsplit') then
   begin
-    self.init(525, 'Soulsplit', @ss_GetUptext, @_317_getChooseOptions, @ss_getNpcText, @ss_getchat);
+    self.init(525, 'Soulsplit', @ss_GetUptext, @_317_getChooseOptions, @ss_getNpcText, @ss_getchat, nil);
     map.healthBox := intToBox(721, 85, 736, 95);
     map.prayerBox := intToBox(737, 124, 751, 135);
     map.runBox := intToBox(734, 163, 753, 174);
@@ -101,11 +105,32 @@ begin
   end;
 end;
 
+function _rsps_server.revision:integer;
+begin
+  result := build;
+end;
+
 function _rsps_server.update:boolean;
 begin
 end;
 
-function _rsps_server.revision:integer;
+procedure setUpSMART;
 begin
+  {$IFNDEF SMART}
+    activateClient();
+  {$ELSE}
+    initSmart(smartForceNewClient);
+
+    if (smartEnableDrawing) then
+      smartSetupDrawing();
+  {$ENDIF}
+
+  if (waitClientReady()) then
+    writeln('Client is ready.')
 end;
+
+
+
+
+
 

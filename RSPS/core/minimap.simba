@@ -28,12 +28,14 @@ begin
     317..507:
     with self do
     begin
-      bounds := intToBox(0, 0, 0, 0); //TODO
-      center := point(round(ms.x1/2), round(ms.y1/2));
-      self.healthBox := intToBox(0, 0, 0, 0);
-      self.prayerBox := intToBox(0, 0, 0, 0);
-      self.runBox := intToBox(0, 0, 0, 0);
-      self.compassBox := intToBox(0, 0, 0, 0);
+      bounds := intToBox(548, 8, 703, 161);
+      center := point(625, 85);
+      self.healthBox := intToBox(727, 30, 745, 44);
+      self.prayerBox := intToBox(742, 70, 762, 83);
+      self.runBox := intToBox(740, 108, 760, 121);
+      self.compassBox := intToBox(521, 2, 563, 46);
+      //self.runBounds := intToBox(792, 481, 812, 504);
+      self.compassColor := 1911089;
       screen_name := '317 mainscreen';
     end;
     507..719:
@@ -120,7 +122,7 @@ end;
   by Narcle & Flight
   Description: Gets the compass angle in radians
 *)
-Function minimap.getCompassRadians: Extended;
+function minimap.getCompassRadians: Extended;
 var
   TPA: TPointArray;
   T: TPoint;
@@ -181,9 +183,35 @@ procedure minimap.setRun(turnOn:boolean;energy:integer) overload;
 begin
 end;
 
-function minimap.getDots:integer;
+(*
+  Author: Officer Barbrady
+  Description: Gets the dots on the minimap
+*)
+
+function minimap.getDots(color, tol:integer;hmod, smod:extended):integer;
+var
+  _dots:TPointArray;
+  __dots:T2DPointArray;
+  cts, i:integer;
 begin
+  result := 0;
+  cts := getColorToleranceSpeed;
+  ColorToleranceSpeed(2);
+  SetColorSpeed2Modifiers(hmod, smod);
+  findColorsTolerance(_dots , color, self.bounds, tol);
+  ColorToleranceSpeed(cts);
+  SetColorSpeed2Modifiers(0.02, 0.02);
+  filterpointspie(_dots, 0, 360, 0, 74, self.center.x, self.center.y);
+  __dots := ClusterTPA(_dots, 1);
+  for i := 0 to high(__dots) do
+    if (length(__dots[i]) = 12) then
+      result := result + 1;
 end;
+
+(*
+  Author:
+  Description:
+*)
 
 procedure minimap.toMainscreen;
 begin

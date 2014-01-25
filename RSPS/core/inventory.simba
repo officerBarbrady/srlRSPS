@@ -1,4 +1,5 @@
 {$include_once mouse.simba}
+//{$f-}
 
 (*
   File name: inventory.simba
@@ -95,6 +96,7 @@ end;
 
 procedure rsps_inventory.setUp(b:tbox);
 begin
+  self.bounds := b;
   self.slots := self.explodeBox(b, 7, 4);
 end;
 

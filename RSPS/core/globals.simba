@@ -33,7 +33,7 @@ type
     getChat:function:tstringarray;
     getOptions:function:array of toptions;
     getNpcText:function: array of chatOption;
-    bankScreen, loggedIn:function:boolean;
+    loggedIn:function:boolean;
   end;
 
 type
