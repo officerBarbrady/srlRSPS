@@ -19,7 +19,7 @@
 
 
 const
-  build = 1;
+  build = 3;
 
 
 
@@ -125,8 +125,12 @@ begin
       smartSetupDrawing();
   {$ENDIF}
 
+  {$IFDEF SMART}
   if (waitClientReady()) then
-    writeln('Client is ready.')
+    writeln('Client is ready.');
+  {$ELSE}
+    writeln('Smart is not being used');
+  {$ENDIF}
 end;
 
 

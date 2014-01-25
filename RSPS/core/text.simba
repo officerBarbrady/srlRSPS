@@ -301,11 +301,12 @@ begin
   cts := GetColorToleranceSpeed;
   ColorToleranceSpeed(1);
   //            Black, Top Blue, grey
-  BoxColors := [131843, 3682593, 3552822];
+ // BoxColors := [131843, 3682593, 3552822, 2497802];
+ BoxColors := [2497802];
   SetLength(ATPA, Length(BoxColors));
-  for i := 0 to High(BoxColors) do
-    FindColorsTolerance(ATPA[i], BoxColors[i], B.X1, B.Y1, B.X2, B.Y2, 0);
-  TPA := MergeATPA(ATPA);
+ // for i := 0 to High(BoxColors) do
+    FindColorsTolerance(tpa, BoxColors[i], B.X1, B.Y1, B.X2, B.Y2, 7);
+ // TPA := MergeATPA(ATPA);
   If Length(TPA) < 100 Then
   begin
     ColorToleranceSpeed(cts);
@@ -337,6 +338,7 @@ begin
   FindColorsTolerance(TPA2, 460291, B.X1, B.Y1, B.X2, B.Y2, 6);//shadow
   SetColorToleranceSpeed(cts);
 
+ // wait(1000);
   bmp := CreateBitmap(B.X2-B.X1+2, B.Y2-B.Y1+2);
   OffsetTPA(TPA, Point(-B.X1, -B.Y1));
   OffsetTPA(TPA2, Point(-B.X1, -B.Y1));
