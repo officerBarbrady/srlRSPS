@@ -34,7 +34,7 @@ begin
     begin
       self.version := revision;
       self.name := serverName;
-      self.getUpText := nil;
+      self.getUpText := @_525_getuptext;
       self.getOptions := @_317_getChooseOptions;
      // self.getNpcText := @_317_getNpcText;
       self.getChat := @_317_getChat;
@@ -64,7 +64,7 @@ begin
       map.setUp(revision);
     end;
   end;
-  Writeln('SRL RSPS.',revision, ' ' , serverName, ' compiled in ' , (getSystemTime - t) , ' ms');
+  Writeln('SRL RSPS.',revision, ' ' , serverName, ' set up in ' , (getSystemTime - t) , ' ms');
 end;
 
 procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;options:function:array of toptions;npctext:function:array of chatoption;chat:function:tstringarray;log:function:boolean) overload;

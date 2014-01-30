@@ -14,3 +14,15 @@ function _724_BankScreen: Boolean;
 begin
   exit(findTextTPA(4106994, 20, 20, 22, 400, 45, 'ank', upCharsEx, nothing));
 end;
+
+function _317_openBank(which:string):boolean;
+begin
+end;
+
+function _508_openBank(which:string):boolean;
+begin
+end;
+
+function _724_openBank(which:string):boolean;
+begin
+end;
