@@ -58,6 +58,16 @@ begin
 end;
 
 (*
+  Author: Officer Barbrady
+  Description: waits for an option
+*)
+
+function _rsps_server.waitOption(S: string; Time: Integer): Boolean; overload;
+begin
+  Result := self.waitOptionMulti([s], 'all', ClickLeft, Time);
+end;
+
+(*
   by Marpis edited by N1ke!
   Description: Waits for a uptext to appear (multiple)
 *)
@@ -76,6 +86,7 @@ begin
       Wait(20 + Random(20));
   end;
 end;
+
 (*
   by Simba Development Team.
   Description: Checks for uptext
