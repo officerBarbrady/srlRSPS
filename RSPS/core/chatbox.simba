@@ -1,5 +1,9 @@
 
-//{$I RSPS/core/mouse.Simba}
+
+(*
+  Author: Officer Barbrady
+  Description: Gets soulsplit chat text
+*)
 
 function ss_getchat(line:integer):string;
 var
@@ -8,7 +12,6 @@ var
   textcolors:tintegerarray;
   i:integer;
 begin
-  //setLength(result, 8);
   textcolors := [16711680, 0, 255, 16711935, 16776960, 16777215, 8388736];
   setLength(texttpas, length(textcolors));
     for i := 0 to high(textcolors) do
@@ -19,6 +22,11 @@ begin
     result := getTextATPA(textatpa, 3, 'smallchars07');
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Gets soulsplit chat text (the whole box)
+*)
+
 function ss_getchat:tstringarray;overload;
 var
   i:integer;
@@ -27,6 +35,11 @@ begin
   for i := 7 downto 0 do
     result[i] := ss_getChat(i);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets 317 chat text
+*)
 
 function _317_getchat(line:integer;colors:tintegerArray):string;
 var
@@ -46,12 +59,22 @@ begin
   result := getTextATPA(textatpa, 3, 'smallchars07');
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: Gets chat text (line)
+*)
+
 function _rsps_server.getChatText(line:integer):string;
 var
   i:integer;
 begin
   result := _317_getChat(line, [0, 128, 255, 16711680, 8650752]);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets chat text (whole box)
+*)
 
 function _rsps_server.getChatText:tstringarray; overload;
 var
@@ -61,6 +84,11 @@ begin
   for i := 0 to 7 do
     result[i] := self.getChatText(i);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: checks if a string exists in the chatbox
+*)
 
 function _rsps_server.chatTextExists(text:string):boolean;
 var
@@ -73,6 +101,11 @@ begin
       exit(true);
 end;
 
+(*
+  Author: Officer Barbrady
+  Description: checks if a array of string exists in the chatbox
+*)
+
 function _rsps_server.chatTextExists(text:TStringArray):boolean; overload;
 var
   i:integer;
@@ -81,6 +114,11 @@ begin
     if (self.chatTextExists(text[i])) then
       exit(true);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: gets npc chat text on soulsplit
+*)
 
 function ss_getNpcText:array of chatOption;
 var
@@ -97,7 +135,6 @@ begin
   atpa := splittpaex(texttpa, 20, 1);
   if (length(atpa) <= 4) then
     TPAtoATPAExWrap(texttpa, 190, 13, atpa);
-  //debugatpa(atpa, 'bmp');
   writeln(length(atpa));
   setLength(result, length(atpa));
   if (length(atpa) = 0) then
@@ -110,6 +147,11 @@ begin
     result[i].bounds := getTpabounds(atpa[i]);
   end;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: clicks npc text
+*)
 
 function _rsps_server.clickNpcText(text:string):boolean;
 var
@@ -124,6 +166,11 @@ begin
       exit(true);
     end;
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: clicks npc text (accepts array of string)
+*)
 
 function _rsps_server.clickNpcText(text:tstringarray):boolean; overload;
 var

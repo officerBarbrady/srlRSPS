@@ -184,17 +184,47 @@ begin
 end;
 
 (*
+  by Zyt3x
+*)
+
+procedure TPointArray.addIndex(const p : TPoint; const index : Integer);
+var
+  I : Integer;
+begin
+  if not inRange(index, low(self), length(self)) then
+  begin
+    WriteLn('ERROR: addIndex: index larger than array length.');
+    Exit;
+  end;
+
+  setLength(self, length(self)+1);
+  for I := high(self)-1 downto index do
+    self[I+1] := self[I];
+  self[index] := p;
+end;
+
+(*
+  by Zyt3x
+*)
+
+procedure TPointArray.append(const p : TPoint);
+begin
+  self.addIndex(p, length(self));
+end;
+
+
+
+(*
   Author: Officer Barbrady
   Description: Gets the dots on the minimap
 *)
 
-function minimap.getDots(color, tol:integer;hmod, smod:extended):integer;
+function minimap.getDots(color, tol:integer;hmod, smod:extended):TPointarray; overload;
 var
   _dots:TPointArray;
   __dots:T2DPointArray;
   cts, i:integer;
 begin
-  result := 0;
   cts := getColorToleranceSpeed;
   ColorToleranceSpeed(2);
   SetColorSpeed2Modifiers(hmod, smod);
@@ -204,8 +234,18 @@ begin
   filterpointspie(_dots, 0, 360, 0, 74, self.center.x, self.center.y);
   __dots := ClusterTPA(_dots, 1);
   for i := 0 to high(__dots) do
-    if (length(__dots[i]) = 12) then
-      result := result + 1;
+    if (length(__dots[i]) < 13) then
+      result.append(middleTPA(__dots[i]));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets the dots on the minimap
+*)
+
+function minimap.countDots(color, tol:integer;hmod, smod:extended):integer
+begin
+  result := length(self.getDots(color, tol, hmod, smod));
 end;
 
 (*

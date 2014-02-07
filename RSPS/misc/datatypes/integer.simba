@@ -7,3 +7,13 @@ function integer.divide(d:integer):integer;
 begin
   result := round(self/d);
 end;
+
+procedure integer.increase;
+begin
+  self := self + 1;
+end;
+
+procedure integer.increase(howMuch:integer);
+begin
+  self := self + howMuch;
+end;
