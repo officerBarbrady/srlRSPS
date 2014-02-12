@@ -96,7 +96,7 @@ begin
     map.compassColor := 1911089;
     map.fontName := 'statchars07';
     //screen.bounds := intToBox(4, 57, 515, 391);
-
+    writeln('ss inited');
   end
   else
   begin
