@@ -22,7 +22,7 @@
 
 
 const
-  curbuild = 1;
+  curbuild = 4;
 
 
 function getLatest:integer;
@@ -42,7 +42,7 @@ begin
   begin
     writeln('Update availible!');
     writeln('Please update the include at https://github.com/officerBarbrady/srlRSPS');
-   // terminateScript();
+    terminateScript();
   end else
     writeln('Include up to date!');
 end;
@@ -51,7 +51,7 @@ procedure _rsps_server.init(revision:Integer;serverName:string);
 var
   t:integer;
 begin
-  //checkUpdate();
+  checkUpdate();
   t := getsystemtime;
   mouseSpeed := 20;
   case revision of
@@ -96,7 +96,7 @@ procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;
 var
   t:integer;
 begin
-  //checkUpdate();
+  checkUpdate();
   mouseSpeed := 20;
   t := getsystemtime;
   self.version := rev;
