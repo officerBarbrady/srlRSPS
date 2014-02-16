@@ -1,17 +1,7 @@
 (*
-Smart
-=====
-
-The Smart file stores all the functions and procedures used to initiate SMART
-in scripts.  To use SMART in a script, simply add the following code before SRL is
-included.
-
-.. code-block:: pascal
-
-    {$DEFINE SMART}
-
-The source for this file can be found `here <https://github.com/SRL/SRL-6/blob/master/lib/misc/smart.simba>`_.
-
+  File name: smart.simba
+  Description: SRL-6 rip off to load smart
+  Authors: Brandon, Olly, Mormanman, Benland100
 *)
 
 {$loadlib libsmartremote}

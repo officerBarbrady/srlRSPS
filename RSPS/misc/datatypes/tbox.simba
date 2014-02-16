@@ -372,10 +372,6 @@ Example:
     box.mouse();
 
 *)
-procedure TBox.mouse(const mouseAction: integer = MOUSE_MOVE);
-begin
-  mouseBox(self, mouseAction);
-end;
 
 (*
 TBox.equals
@@ -679,10 +675,6 @@ Example:
     p := myBox.getGaussPoint();
 
 *)
-function TBox.getGaussPoint: TPoint;
-begin
-  gaussBox(result, self);
-end;
 
 (*
 TBox.getRandomPoint

@@ -1,12 +1,7 @@
 (*
-Client
-======
-
-The Client file holds functions that have anything to do with the RS client or
-client settings.
-
-The source for this file can be found `here <https://github.com/SRL/SRL-6/blob/master/lib/core/client.simba>`_.
-
+  File name: client.simba
+  Description: SRL-6 rip off to load smart
+  Authors: ZephyrsFury, Coh3n, Olly
 *)
 
 

@@ -8,11 +8,6 @@ begin
   result := length(self) - 1;
 end;
 
-function tstringarray.rand:string;
-begin
-  result := self[random(self.hi)];
-end;
-
 procedure tstringarray.increaseLength;
 begin
   setLength(self, length(self) + 1);
@@ -29,16 +24,6 @@ var
 begin
   for i := 0 to high(pieces) do
     result := result + pieces[i];
-end;
-
-procedure tstringarray.increaseLength;
-begin
-  setLength(self, length(self) + 1);
-end;
-
-procedure tstringarray.reset;
-begin
-  setLength(self, 0);
 end;
 
 procedure tstringarray.filterSize(maxLength:Integer);

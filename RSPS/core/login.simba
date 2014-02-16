@@ -9,8 +9,8 @@
 
 
 (*
-  Author: ??
-  Description: Gets system time
+  Author: Officer Barbrady
+  Description: Sets camera angle to the highest
 *)
 
 Procedure rsps_setangleHigh();
@@ -44,6 +44,11 @@ begin
       wait(4000);
   end;
 end;       }
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if logged into a 724 server
+*)
 
 function _724_loggedIn:boolean;
 begin

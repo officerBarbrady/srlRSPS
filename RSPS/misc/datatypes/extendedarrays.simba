@@ -1,36 +1,16 @@
 (*
-Extended Arrays
-===============
-
-A file that stores type functions to manipulate TExtendedArrays.
-
-The source for this file can be found `here <https://github.com/SRL/SRL-6/blob/master/lib/utilities/types/extendedarrays.simba>`_.
-
+  File name: Extendedarrays.simba
+  Description: A file that stores type functions to manipulate TExtendedArrays.
+  Authors: Zyt3x
 *)
 
 {$f-}
 
 (*
-TExtendedArray.addIndex
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure TExtendedArray.addIndex(const ext : Extended; const index : Integer);
-
-Used to add a value to a TExtendedArray at a chosen index larger than the array's lowest index.
-
-.. note::
-
-    - by Zyt3x
-
-Example:
-
-.. code-block:: pascal
-
-    TEA.addIndex(1337.0, 0);
-
+  Author: Zyt3x
+  Description: Used to add a value to a TExtendedArray at a chosen index larger than the array's lowest index.
 *)
+
 procedure TExtendedArray.addIndex(const ext : Extended; const index : Integer);
 var
   I : Integer;

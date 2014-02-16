@@ -1,0 +1,126 @@
+{$include_once text.simba}
+(*
+  File name: gametab.simba
+  Description: Contains functions related to gametab
+  Authors: Officer Barbrady
+*)
+
+(*
+  Author: Officer Barbrady
+  Description: Gets current gametab
+*)
+
+function getCurrentTab:integer;
+var
+  i, k, x, y, o, p:integer;
+begin
+  x := 540;
+  y := 240;
+  for k := 1 to 2 do
+    for i := 1 to 7 do
+      if findColorTolerance(o, p, 921908,
+      x + ((i-1) * 29) - 13,
+      y + ((k-1) * 300) - 13,
+      x + ((i-1) * 29) + 13,
+      y + ((k-1) * 300) + 13,
+      3) then
+      begin
+        if (k = 1) then
+          exit(i)
+        else
+        exit((i + k) + (k * 2) + 1);
+      end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if a tab is open
+*)
+
+function gameTab(tab:integer):boolean;
+begin
+  result := (getCurrentTab() = tab);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Opens a gametab
+*)
+
+procedure openTab(tab:integer);
+var
+  y:integer;
+begin
+  if (tab > 14) or (tab < 1) then
+  begin
+    writeln('Tab out of bounds!');
+    exit;
+  end;
+  y := 240;
+  if (gameTab(tab)) then
+    exit
+  else
+    if (tab > 7) then
+    begin
+      y := y + 300;
+      tab := tab - 7;
+    end;
+    mouse(540 + (tab - 1) * 32, y);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets name of a freind off freinds list
+*)
+
+function getFriendName(index:integer):string
+begin
+  if (not gameTab(TAB_FRIENDS)) then
+    gameTab(TAB_FRIENDS);
+  result := getSimpleText([16777215], 556, 289 + (index * 15), 650, 299 + (index * 15), 'smallchars07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets name of all visible freinds
+*)
+
+function getFriendNames:TStringArray;
+var
+  i:integer;
+begin
+  for i := 0 to 11 do
+  begin
+    setLength(result, length(result) + 1);
+    result[i] := getFriendName(i);
+    if (result[i] = '') then
+    begin
+      setLength(result, length(result) - 1);
+      exit;
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets the name of the wielded weapon
+*)
+
+function getWeaponName:string;
+begin
+  if (not gameTab(TAB_COMBAT)) then
+    gameTab(TAB_COMBAT);
+  result := getSimpleText([2070783], 586, 265, 701, 284, 'charsNPC07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets the total level
+*)
+
+function getTotalLevel:string;
+begin
+  if (not gameTab(TAB_STATS)) then
+    gameTab(TAB_STATS);
+  result := getSimpleText([65535], 626, 262, 660, 277, 'upchars07');
+end;

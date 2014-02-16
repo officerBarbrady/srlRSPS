@@ -8,7 +8,7 @@ The source for this file can be found `here <https://github.com/SRL/SRL-6/blob/m
 
 *)
 
-{$include_once ../math.simba}
+{$include_once typemath.simba}
 {$include_once tpoint.simba}
 
 {$f-}
@@ -90,83 +90,6 @@ Example:
     TPA.addIndex(point(13, 37), 0);
 
 *)
-procedure TPointArray.addIndex(const p : TPoint; const index : Integer);
-var
-  I : Integer;
-begin
-  if not inRange(index, low(self), length(self)) then
-  begin
-    WriteLn('ERROR: addIndex: index larger than array length.');
-    Exit;
-  end;
-
-  setLength(self, length(self)+1);
-  for I := high(self)-1 downto index do
-    self[I+1] := self[I];
-  self[index] := p;
-end;
-
-(*
-TPointArray.deleteIndex
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure TPointArray.deleteIndex(const index : Integer);
-
-Used to delete a point of a TPointArray at a chosen index larger than the array's lowest index.
-
-.. note::
-
-    - by Zyt3x
-
-Example:
-
-.. code-block:: pascal
-
-    TPA.deleteIndex(0);
-
-*)
-procedure TPointArray.deleteIndex(const index : Integer);
-var
-  I : Integer;
-begin
-  if not inRange(index, low(self), length(self)) then
-  begin
-    WriteLn('ERROR: deleteIndex: index larger than array length.');
-    Exit;
-  end;
-
-  for I := index to high(self)-1 do
-    self[I] := self[I+1];
-  setLength(self, length(self)-1);
-end;
-
-(*
-TPointArray.append
-~~~~~~~~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure TPointArray.append(const p : TPoint);
-
-Used to append a point to a TPointArray.
-
-.. note::
-
-    - by Zyt3x
-
-Example:
-
-.. code-block:: pascal
-
-    TPA.append(1337.0);
-
-*)
-procedure TPointArray.append(const p : TPoint);
-begin
-  self.addIndex(p, length(self));
-end;
 
 (*
 TPointArray.combine
@@ -439,10 +362,6 @@ Example:
     b := TPA.getBounds();
 
 *)
-function TPointArray.getBounds() : TBox;
-begin
-  result := getTPABounds(self);
-end;
 
 (*
 TPointArray.getDensity
@@ -632,32 +551,6 @@ Example:
 function TPointArray.returnNotInTPA(b: TBox): TPointArray;
 begin
   result := returnPointsNotInTPA(self, b);
-end;
-
-(*
-TPointArray.offset
-~~~~~~~~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure TPointArray.offset(p: TPoint);
-
-Offsets each point in the TPointArray by the point p.
-
-.. note::
-
-    - by Coh3n
-
-Example:
-
-..code-block:: pascal
-
-    TPA.offset(point(5, 5));
-
-*)
-procedure TPointArray.offset(p: TPoint);
-begin
-  offsetTPA(self, p);
 end;
 
 (*

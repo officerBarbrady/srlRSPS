@@ -365,11 +365,6 @@ Example:
     p.gaussRange(-10, 10);
 
 *)
-function TPoint.gaussRange(const aFrom, aTo: integer): TPoint;
-begin
-  result.x := gaussRangeInt(self.x + aFrom, self.x + aTo);
-  result.y := gaussRangeInt(self.y + aFrom, self.y + aTo);
-end;
 
 (*
 TPoint.gaussRange
@@ -393,11 +388,6 @@ Example:
     p.gaussRange(-10, 10, -5, 5);
 
 *)
-function TPoint.gaussRange(const xFrom, xTo, yFrom, yTo: integer): TPoint; overload;
-begin
-  result.x := gaussRangeInt(self.x + xFrom, self.x + xTo);
-  result.y := gaussRangeInt(self.y + yFrom, self.y + yTo);
-end;
 
 (*
 TPoint.getAngleTo

@@ -1,5 +1,5 @@
 {$include_once mouse.simba}
-//{$f-}
+{$include_once gametab.simba}
 
 (*
   File name: inventory.simba
@@ -162,10 +162,8 @@ var
 begin
   result := 0;
   for i := 0 to high(self.slots) do
-  begin
     if self.slotFull(i) then
       result := result + 1;
-  end;
 end;
 
 (*
@@ -221,12 +219,9 @@ function rsps_inventory.countBitmap(bmpSearch, tol:Integer):Integer;
 var
   i, x, y:Integer;
 begin
-
   for i := 0 to high(self.slots) do
-  begin
-    If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
+    if FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
       result := result + 1;
-  end;
 end;
 
 (*
@@ -240,10 +235,8 @@ var
 begin
   result := 0;
   for i := 0 to high(self.slots) do
-  begin
     if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
       result := result + 1;
-  end;
 end;
 
 (*
@@ -308,5 +301,83 @@ begin
       self.interactItem(i, button);
       exit(true);
     end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns amount of item in a slot
+*)
+
+function rsps_inventory.itemAmount(slot:integer):integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  result := getAmountBox(self.slots[slot]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns total count of all items
+*)
+
+function rsps_inventory.totalItemAmount:Int64;
+var
+  i:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for i := 0 to 27 do
+    result := result + self.itemAmount(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a dtm is
+*)
+
+function rsps_inventory.DTMPosition(model:integer):integer;
+var
+  i, x, y:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for i := 0 to 27 do
+    if findDTM(x, y, model, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+      exit(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a bitmap is
+*)
+
+function rsps_inventory.bitmapPosition(bmp, tol:integer):integer;
+var
+  i, x, y:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for i := 0 to 27 do
+    if findBitmapToleranceIn(x, y, bmp, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
+      exit(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets the name of an item in a slow
+*)
+
+function rsps_inventory.getItemName(slot:integer):string;
+var
+  p:TPoint;
+begin
+  if (not self.slotFull(slot)) then
+    exit('')
+  else
+  begin
+    p := boxCenter(self.slots[slot]);
+    mmouse(p.x, p.y, 0, 0);
+    result := getSimpleText([4231423], 7, 62, 255, 77, 'upchars07');
   end;
 end;

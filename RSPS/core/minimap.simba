@@ -265,6 +265,85 @@ begin
  // self.lastRun := self.getRun;
 end;
 
+(*
+  Author: Nava2, Rasta Magicion
+  Description: Gets the dots on the minimap
+*)
+
+function GetMiniMapDotsIn(WhatDot: String; x1, y1, x2, y2: Integer): TPointArray;
+var
+  I, Dif, Radius, Hi, C: Integer;
+  TPA: TPointArray;
+begin
+  case LowerCase(WhatDot) of
+    'npc', 'n', 'yellow', 'y': Dif := 4369;
+    'item', 'i', 'red', 'r': Dif := 29;
+    'player', 'p', 'white', 'w': Dif := 1907997;
+    'friend', 'f', 'green', 'g': Dif := 5376;
+    'team', 't', 'blue', 'b', 'cape': Dif := 2171941;
+    {'clan', 'c', 'orange', 'o': Dif := -1;}
+  else
+   writeln('');// srl_Warn('GetMiniMapDotsIn', '"' + WhatDot + '" is not a valid dot type', warn_AllVersions);
+  end;
+  Freeze;
+  Radius := Max((x2-x1)div 2, (y2-y1)div 2);
+  FindColorsPie(TPA, 65536, 0, 0, 360, 0, radius, x1, y1, x2, y2, (x1+x2)div 2, (y1+y2)div 2);
+  Hi := High(TPA);
+  SetLength(Result, Hi + 1);
+  if (Hi < 0) then
+  begin
+    UnFreeze;
+    Exit;
+  end;
+  C := 0;
+  for I := 0 to Hi do
+  begin
+    if (GetColor(TPA[I].X-1, TPA[I].Y-1) - GetColor(TPA[I].X, TPA[I].Y-1) = Dif) then
+    begin
+      Result[C] := Point(TPA[I].x, TPA[i].y - 2);
+      Inc(C);
+    end;
+  end;
+  Unfreeze;
+  SetLength(Result, C);
+end;
+
+(*
+  Author: Shatterhand
+  Description: Converts MM point to MS point
+*)
+
+procedure ss_MMToMS(var X, Y:Integer);
+var
+  x1, y1 : Integer;
+begin
+  x1 := X;
+  y1 := X;
+
+  X := Round((X-627)*255/40) + 252;
+  Y := Round((Y-139)*176/28) + 224;
+
+  if X < 3 then X := 3;
+  if Y < 3 then Y := 3;
+  if X > 516 then X := 516;
+  if Y > 337 then Y := 337;;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Function version of MMtoMS
+*)
+
+function ss_MMtoMsPoint(p:TPoint):TPoint;
+var
+  x, y:integer;
+begin
+  x := p.x;
+  y := p.y;
+  ss_MMToMS(x, y);
+  result := Point(x, y);
+end;
+
 
 
 

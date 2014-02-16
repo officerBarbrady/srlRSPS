@@ -1,0 +1,84 @@
+ (*
+  File name: interface.simba
+  Description: Contains functions for interfaces
+  Authors: Officer Barbrady
+*)
+
+
+(*
+  Author: Officer Barbrady
+  Description: Gets interface TPA
+*)
+
+function _317_getInterfaceTPA:TPointArray;
+begin
+  findColorsTolerance(result, 3358536, mainscreen.bounds, 3);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets open interface bounds
+*)
+
+function _317_getInterfaceBounds:TBox;
+begin
+  result := getTPABounds(_317_getInterfaceTPA);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if interface is open
+*)
+
+function _317_interfaceOpen:boolean;
+begin
+  result := (length(_317_getInterfaceTPA) > 1000);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets name of interface
+*)
+
+function _317_getInterfaceName:string;
+var
+  b:TBox;
+begin
+  if (not _317_interfaceOpen) then
+    exit;
+  b := _317_getInterfaceBounds();
+  b.y2 := b.y1 + 40;
+  result := getSimpleText([2070783, 37375], b.x1, b.y1, b.x2, b.y2, 'upchars07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets interface description
+*)
+
+function _317_getInterfaceDescription:string;
+var
+  b:TBox;
+begin
+  if (not _317_interfaceOpen) then
+    exit;
+  b := _317_getInterfaceBounds();
+  b.y1 := b.y1 + 80;
+  result := getSimpleText([2070783], b.x1, b.y1, b.x2, b.y2, 'smallchars07');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Closes interface
+*)
+
+procedure _317_closeInterface;
+var
+  b:TBox;
+  text:string;
+begin
+  if (not _317_interfaceOpen) then
+    exit;
+  b := _317_getInterfaceBounds();
+  mouse(b.x2 - 15, b.y1 + 5);
+end;

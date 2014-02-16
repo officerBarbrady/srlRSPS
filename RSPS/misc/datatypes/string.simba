@@ -1,27 +1,157 @@
+(*
+  Author: Officer Barbrady
+  Description: Returns true if string starts with s
+*)
+    {
 function string.startsWith(s:string):boolean;
 begin
   result := self[1] = s;
-end;
+end;   }
 
+(*
+  Author: Officer Barbrady
+  Description: returns true if string ends with s
+*)
+      {
 function string.endsWith(s:string):boolean;
 begin
   result := self[length(self)] = s
-end;
+end;  }
 
+(*
+  Author: Officer Barbrady
+  Description: length of string
+*)
+            {
 function string.size:integer;
 begin
   result := length(self);
 end;
-
+         }
+(*
+  Author: Officer Barbrady
+  Description: Turns string into an array
+*)
+             {
 function string.toArray:tstringarray;
 var
   i:integer;
 begin
   for i := 1 to length(self) do
     result[i - 1] := self[i];
-end;
+end;   }
+
+(*
+  Author: Officer Barbrady
+  Description: Random index of a string
+*)        {
 
 function string.rand:string;
 begin
   result := self[random(self.size) + 1];
+end;     }
+
+(*
+  Author: Officer Barbrady
+  Description: Converts string to boolean
+*)
+
+function string.toBoolean():boolean;
+begin
+  if (lowerCase(self) = 'true') then
+    exit(true)
+  else
+    exit(false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Converts formed string into an interger array (such as [0, 1, 5])
+*)
+
+function string.toIntegerArray():TIntegerArray;
+var
+  strArr:TStringArray;
+  i:integer;
+begin
+  self := Replace(self, ']', '', [rfReplaceAll]);
+  self := Replace(self, '[', '', [rfReplaceAll]);
+  strArr := explode(',', self);
+  setLength(result, length(strArr));
+  for i := 0 to high(strArr) do
+    result[i] := StrToInt(strArr[i]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Converts formed string into an extended array (such as [0.56, 1.23])
+*)
+
+function string.toExtendedArray():TExtendedArray;
+var
+  strArr:TStringArray;
+  i:integer;
+begin
+  self := Replace(self, ']', '', [rfReplaceAll]);
+  self := Replace(self, '[', '', [rfReplaceAll]);
+  strArr := explode(',', self);
+  setLength(result, length(strArr));
+  for i := 0 to high(strArr) do
+    result[i] := StrToFloat(strArr[i]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Converts formed string into an string
+  array, must be formed as such ['hello^world^hello']
+*)
+
+function string.toStringArray():TStringArray;
+var
+  strArr:TStringArray;
+  i:integer;
+begin
+  self := Replace(self, ']', '', [rfReplaceAll]);
+  self := Replace(self, '[', '', [rfReplaceAll]);
+  strArr := explode('^', self);
+  setLength(result, length(strArr));
+  for i := 0 to high(strArr) do
+    result[i] := strArr[i];
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if string contains s
+*)
+
+function string.contains(s:string):boolean;
+var
+  i:integer;
+begin
+  for i := 1 to length(self) do
+    if (Pos(s[i], self) > 0) then
+      exit(true);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Position of a string in a string
+*)
+
+function string.position(str:string):integer;
+begin
+  result := pos(str, self);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Removes end of a string
+*)
+
+function string.removeEnd:string;
+var
+  i:integer;
+begin
+  for i := 1 to (length(self) - 1) do
+    result := result + self[i];
 end;

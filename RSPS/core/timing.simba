@@ -1,7 +1,6 @@
 (*
-  File name: Simba.simba
-  Description: Contains functions that are called within simba, and extra overloaded
-  functions
+  File name: timing.simba
+  Description: Contains functions that time thing or wait
   Authors: Officer Barbrady
 *)
 

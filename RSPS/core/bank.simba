@@ -1,3 +1,7 @@
+{$include_once interface.simba}
+//{$include_once misc/datatypes/string.simba}
+{$include_once RSPS/misc/datatypes/string.Simba}
+
 (*
   File name: Bank.simba
   Description: Bank functions
@@ -16,14 +20,26 @@ begin
   exit(findTextTPA(4106994, 20, 20, 22, 400, 45, 'ank', upCharsEx, nothing));
 end;
 
-function _317_openBank(which:string):boolean;
+(*
+  Author: Officer Barbrady
+  Description: Returns true if interface text contains ank of
+*)
+
+function _317_bankScreen:boolean;
+var
+  f:string;
 begin
+  f := _317_getInterfaceName();
+  result := (f.contains('ank of'));
 end;
 
-function _508_openBank(which:string):boolean;
-begin
-end;
+(*
+  Author: Officer Barbrady
+  Description: Closes bank, just calls closeInterface called close bank for
+  naming purposes
+*)
 
-function _724_openBank(which:string):boolean;
+procedure _317_closeBank();
 begin
+  _317_closeInterface();
 end;

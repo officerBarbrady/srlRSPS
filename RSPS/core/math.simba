@@ -1,59 +1,31 @@
 (*
   File name: main.simba
   Description: Contains functions for math calculations
-  Authors: Officer Barbrady
+  Authors: Officer Barbrady, Coh3n, Olly, marpis
 *)
+
 (*
-TPointArray.offset
-~~~~~~~~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure TPointArray.offset(p: TPoint);
-
-Offsets each point in the TPointArray by the point p.
-
-.. note::
-
-    - by Coh3n
-
-Example:
-
-..code-block:: pascal
-
-    TPA.offset(point(5, 5));
-
+  Author: Coh3n
+  Description: Offsets each point in the TPointArray by the point p.
 *)
 procedure TPointArray.offset(p: TPoint);
 begin
   offsetTPA(self, p);
 end;
 
-function TPointArray.getBounds() : TBox;
+(*
+  Author: Officer Barbrady
+  Description: Gets bounds of a TPA
+*)
+
+function TPointArray.getBounds:TBox;
 begin
-  result := getTPABounds(self);
+  exit(getTPABounds(self));
 end;
 
- (*
-freeBitmaps
-~~~~~~~~~~~
-
-.. code-block:: pascal
-
-    procedure freeBitmaps(bitmaps: TIntegerArray);
-
-Free's an array of bitmaps.
-
-.. note::
-
-    - by Olly
-
-Example:
-
-.. code-block:: pascal
-
-     freeBitmaps([bmp1, bmp2]);
-
+(*
+  Author: Olly
+  Description: Free's an array of bitmaps.
 *)
 procedure freeBitmaps(bitmaps: TIntegerArray);
 var
@@ -82,7 +54,7 @@ end;
 
 (*
   Author: ??
-  Description: Gets system time
+  Description: -
 *)
 
 function BoxClosestPoint(p : TPoint; b : TBox) : TPoint;
@@ -121,7 +93,7 @@ end;
 
 (*
   Author: ??
-  Description: Gets system time
+  Description:-
 *)
 
 function RandomPointBoxEx(p : TPoint; b : TBox; extraDist : integer) : TPoint;
@@ -148,13 +120,10 @@ begin
 end;
 
 (*
-
-
-    - by marpis
-    - Last Updated: 23 May 2013 by Coh3n
-
-
+  Author:by marpis, Coh3n
+  Desctipion: Gets pixel shift
 *)
+
 function getPixelShift(b: TBoxArray; time: integer): TIntegerArray;
 var
   l, i: integer;
@@ -184,12 +153,8 @@ begin
 end;
 
 (*
-
-
-    - by marpis
-    - Last Updated: 23 May 2013 by Coh3n
-
-
+  Author:by marpis, Coh3n
+  Desctipion: Gets pixel shift
 *)
 function getPixelShift(b: TBox; time: integer): integer; overload;
 var
@@ -200,11 +165,8 @@ begin
 end;
 
 (*
-
-
-    - by Coh3n
-    - Last Updated: 23 May 2013 by Coh3n
-
+  Author:Coh3n
+  Desctipion: Gets pixel shift
 *)
 function getPixelShift(atpa: T2DPointArray; time: integer): TIntegerArray; overload;
 var
@@ -246,10 +208,8 @@ begin
 end;
 
 (*
-
-    - by Coh3n
-    - Last Updated: 23 May 2013 by Coh3n
-
+  Author: Coh3n
+  Desctipion: Gets pixel shift in a tpa
 *)
 function getPixelShift(tpa: TPointArray; t: integer): integer; overload;
 var
@@ -260,11 +220,8 @@ begin
 end;
 
 (*
-
-
-    - by Coh3n
-    - Last Updated: 23 May 2013 by Coh3n
-
+  Author:Coh3n
+  Desctipion: Gets average pixel shift (overloaded)
 *)
 function getPixelShiftAverage(b: TBoxArray; waitPerLoop, maxTime: integer): TIntegerArray;
 var
@@ -288,11 +245,10 @@ begin
 end;
 
 (*
-
-
-    - by Coh3n
-
+  Author:by Coh3n
+  Desctipion: Gets pixel shift average (overloaded)
 *)
+
 function getPixelShiftAverage(b: TBox; waitPerLoop, maxTime: integer): integer; overload;
 var
   arr: TIntegerArray;
@@ -302,11 +258,10 @@ begin
 end;
 
 (*
-
-
-    - by Coh3n
-
+  Author:by Coh3n
+  Desctipion: Gets pixel shift average (overloaded)
 *)
+
 function getPixelShiftAverage(atpa: T2DPointArray; waitPerLoop, maxTime: integer): TIntegerArray; overload;
 var
   t, l, i: integer;
@@ -329,12 +284,10 @@ begin
 end;
 
 (*
-
-
-    - by Coh3n
-    - Last Updated: 23 May 2013 by Coh3n
-
+  Author:by Coh3n
+  Desctipion: Gets pixel shift average (overloaded)
 *)
+
 function getPixelShiftAverage(b: TPointArray; waitPerLoop, maxTime: integer): integer; overload;
 var
   arr: TIntegerArray;

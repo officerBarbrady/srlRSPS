@@ -133,4 +133,17 @@ begin
   result := findColor(x, y, color, b.x1, b.y1, b.x2, b.y2);
 end;
 
+(*
+  Author: not me
+  Description: find colors and filters by rad
+*)
+
+function FindColorsPie(var Points: TPointArray; Color, Tol: Integer; StartD,
+  EndD, MinR, MaxR: Extended; x1, y1, x2, y2, Mx, My: Integer): Boolean;
+begin
+  Result := FindColorsTolerance(Points, Color, x1, y1, x2, y2, Tol);
+  if (Result) then
+    FilterPointsPie(Points, StartD, EndD, MinR, MaxR, Mx, My);
+end;
+
 

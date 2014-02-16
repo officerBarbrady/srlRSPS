@@ -6,7 +6,138 @@
 *)
 
 {$I RSPS/misc/Simba.Simba}
+{$I RSPS/misc/datatypes/string.Simba}
 
+(*
+  Author: Officer Barbrady
+  Description: Checks if strings of one array of string is in another
+  array of string
+*)
+
+function isText(Text, theText: TStringArray): Boolean;
+var
+  i, k: Integer;
+begin
+  for i := 0 to High(Text) do
+    for k := 0 to high(theText) do
+      if (Pos(Text[i], TheText[k]) > 0) then
+        exit(true);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Checks of XP bar is open
+*)
+
+function ss_xpBarOpen:boolean;
+begin
+  result := (countColorTolerance(3885388, 410, 110, 508, 123, 5) >= 300) and (countColorTolerance(16777215, 410, 110, 508, 123, 5) >= 150);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets XP bar TPA
+*)
+
+function ss_getXpBarTPA:TPointArray;
+begin
+  if not ss_xpBarOpen then
+    mouse(534, 117);
+  findColors(result, 16777215, 400, 107, 508, 123);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets XP bar total(string)
+*)
+
+function ss_getXpBarTotalString:string;
+var
+  textTPA:TPointArray;
+  textATPA:T2DPointArray;
+begin
+  textTPA := ss_getXpBarTPA();
+  textATPA := splittpaex(textTPA, 1, 10);
+  filtertpasbetween(textatpa, 0, 1);
+  SortATPAFromFirstPointX(textATPA, Point(0, 0));
+  result := getTextATPA(textatpa, 3, 'smallchars07');
+  result := replace(result, '''', ',', [rfReplaceAll]);
+  result := replace(result, 'Total: ', '', [rfReplaceAll]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets XP bar total(integer)
+*)
+
+function ss_getXPBarTotal:integer;
+var
+  barString:string;
+begin
+  barString := ss_getXPBarTotalString();
+  barString := replace(barString, ',', '', [rfReplaceAll]);
+  try
+    result := StrToInt(barString);
+  except
+    result := -1;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets item amount within a box
+*)
+
+function getAmountBox(b:TBox):integer;
+var
+  Colors:TIntegerArray;
+  textTPA:TPointArray;
+  textATPA, textATPAS:T2DPointArray;
+  i:integer;
+  textStr:string;
+begin
+  Colors := [65535, 16777215, 8453888];
+  setLength(textATPAS, length(colors));
+  for i := 0 to high(colors) do
+    findColors(textATPAS[i], Colors[i], b);
+  textTPA := mergeATPA(textATPAS);
+  textATPA := SplitTPAEx(textTPA, 1, 10);
+  filtertpasbetween(textatpa, 0, 1);
+  SortATPAFromFirstPointX(textATPA, Point(0, 0));
+  textStr := getTextATPA(textATPA, 3, 'statchars07');
+  if textStr.contains('M') then
+    result := (StrToInt(textStr.removeEnd) * 1000000)
+  else if textStr.contains('K') then
+    result := (StrToInt(textStr.removeEnd) * 1000)
+  else
+    result := StrToInt(textStr);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets text within x coords
+*)
+
+function getSimpleText(Colors:TIntegerArray;x1, y1, x2, y2:integer;font:string):String;
+var
+  textTPA:TPointArray;
+  textATPA, textATPAS:T2DPointArray;
+  i:integer;
+  textStr:string;
+begin
+  setLength(textATPAS, length(colors));
+  for i := 0 to high(colors) do
+    findColors(textATPAS[i], Colors[i], x1, y1, x2, y2);
+  textTPA := mergeATPA(textATPAS);
+  textATPA := SplitTPAEx(textTPA, 1, 10);
+  filtertpasbetween(textatpa, 0, 1);
+  SortATPAFromFirstPointX(textATPA, Point(0, 0));
+  result := getTextATPA(textATPA, 3, font);
+end;
+(*
+  Author: Wizzup?
+  Description: DebugsTPA
+*)
 
 function DebugTPA(Points: TPointArray; BmpName: string): Boolean;
 var
@@ -26,6 +157,11 @@ begin
   FreeBitmap(Bmp);
   Result := True;
 end;
+
+(*
+  Author: Wizzup?
+  Description: DebugsATPA
+*)
 
 function DebugATPA(aPoints: T2DPointArray; BmpName: string): Boolean;
 var

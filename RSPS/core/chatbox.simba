@@ -1,4 +1,8 @@
-
+(*
+  File name: chatbox.simba
+  Description: Contains functions for to get text related to the chatbox
+  Authors: Officer Barbrady
+*)
 
 (*
   Author: Officer Barbrady
@@ -12,7 +16,7 @@ var
   textcolors:tintegerarray;
   i:integer;
 begin
-  textcolors := [16711680, 0, 255, 16711935, 16776960, 16777215, 8388736];
+  textcolors := [128, 16711680, 0, 255, 16711935, 16776960, 16777215, 8388736];
   setLength(texttpas, length(textcolors));
     for i := 0 to high(textcolors) do
       findColors(texttpas[i], textcolors[i], 7, 402 + (line * 14), 495, 413 + (line * 14));

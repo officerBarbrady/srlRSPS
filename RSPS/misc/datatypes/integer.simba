@@ -13,7 +13,7 @@ begin
   self := self + 1;
 end;
 
-procedure integer.increase(howMuch:integer);
+procedure integer.increase(howMuch:integer); overload;
 begin
   self := self + howMuch;
 end;

@@ -9,8 +9,11 @@
 {$include_once core/bank.simba}
 {$include_once core/chatbox.simba}
 {$include_once core/minimap.simba}
+{$include_once core/gametab.simba}
+{$include_once core/interface.simba}
 
 {$include_once misc/simba.simba}
+{$include_once misc/datatypes/types.simba}
 
 {$IFDEF SMART}
   {$include_once core/smart/smart.simba}
@@ -19,14 +22,36 @@
 
 
 const
-  build = 3;
+  curbuild = 1;
 
 
+function getLatest:integer;
+begin
+  try
+    result := StrToInt(getPage('http://pastebin.com/raw.php?i=dDBtZeE2'));
+  except
+    result := -1;
+  end;
+end;
+
+procedure checkUpdate();
+begin
+  Writeln('Checking for update...');
+  writeln('Current version: ' , curbuild, ' latest version: ' , getLatest);
+  if (getLatest > curbuild) then
+  begin
+    writeln('Update availible!');
+    writeln('Please update the include at https://github.com/officerBarbrady/srlRSPS');
+   // terminateScript();
+  end else
+    writeln('Include up to date!');
+end;
 
 procedure _rsps_server.init(revision:Integer;serverName:string);
 var
   t:integer;
 begin
+  //checkUpdate();
   t := getsystemtime;
   mouseSpeed := 20;
   case revision of
@@ -71,8 +96,11 @@ procedure _rsps_server.init(rev:Integer;serverName:string;uText:function:string;
 var
   t:integer;
 begin
+  //checkUpdate();
+  mouseSpeed := 20;
   t := getsystemtime;
-  self.init(rev, serverName);
+  self.version := rev;
+  self.name := serverName;
   self.getupText := @uText;
   self.getOptions := @options;
   self.getNpcText := @npctext;
@@ -95,23 +123,15 @@ begin
     map.runbounds := intToBox(705, 150, 729, 176);
     map.compassColor := 1911089;
     map.fontName := 'statchars07';
+    inventory.setUp(IntToBox(564, 266, 720, 514));
+    mainscreen.bounds := intToBox(2, 57, 514, 392);
     //screen.bounds := intToBox(4, 57, 515, 391);
-    writeln('ss inited');
   end
   else
   begin
     Writeln('Server ' , serverName , ' is not supported!');
     terminateScript;
   end;
-end;
-
-function _rsps_server.revision:integer;
-begin
-  result := build;
-end;
-
-function _rsps_server.update:boolean;
-begin
 end;
 
 procedure setUpSMART;

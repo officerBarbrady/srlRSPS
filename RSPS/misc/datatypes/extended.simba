@@ -1,3 +1,14 @@
+(*
+  File name: Extended.simba
+  Description: contains functions for extended data types
+  Authors: Officer Barbrady
+*)
+
+(*
+  Author: Officer Barbrady
+  Description: converts extended to integer
+*)
+
 function extended.toInt:integer;
 begin
   result := round(self);
