@@ -145,7 +145,6 @@ function rsps_inventory.slotFull(slot:Integer):Boolean;
 var
   x, y:Integer;
 begin   //65536
-  result := false;
   if FindColor(x, y, self.outline, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) or
     FindColor(x, y, 65536, self.slots[slot].x1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2) then
       result := true;
@@ -160,7 +159,6 @@ function rsps_inventory.count:Integer;
 var
   i:Integer;
 begin
-  result := 0;
   for i := 0 to high(self.slots) do
     if self.slotFull(i) then
       result := result + 1;
@@ -189,17 +187,39 @@ end;
 
 (*
   Author: Officer Barbrady
+  Description: Interacts with an item in the inventory
+*)
+
+procedure rsps_inventory.mouseItem(slot:Integer);
+begin
+  mmouse(self.boxCenter(self.slots[slot]).x, self.boxCenter(self.slots[slot]).y, 0, 0);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if a bitmap Exists in a slot
+*)
+
+function rsps_inventory.bitmapExists(bmp, slot, tol:integer):boolean;
+var
+  x, y:integer;
+begin
+  result := FindBitmaptoleranceIn(bmp, x, y, self.slots[slot].X1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2, tol);
+end;
+
+(*
+  Author: Officer Barbrady
   Description: Searches for a bitmap in the inventory
 *)
 
 function rsps_inventory.searchBitmap(BMPSearch, tol:Integer;click, cont:Boolean):Boolean;
 var
-  i, x, y:Integer;
+  i:Integer;
 begin
   result := false;
   for i := 0 to high(self.slots) do
   begin
-    If FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
+    If self.bitmapExists(bmpSearch, i, tol) then
     begin
       result := true;
       if click then
@@ -217,11 +237,23 @@ end;
 
 function rsps_inventory.countBitmap(bmpSearch, tol:Integer):Integer;
 var
-  i, x, y:Integer;
+  i:Integer;
 begin
   for i := 0 to high(self.slots) do
-    if FindBitmaptoleranceIn(BMPsearch, x, y, self.slots[i].X1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
+    if (self.bitmapExists(bmpSearch, i, tol)) then
       result := result + 1;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if a DTM Exists in a slot
+*)
+
+function rsps_inventory.DTMExists(DTM, slot:integer):boolean;
+var
+  x, y:integer;
+begin
+  result := findDTM(DTM, x, y, self.slots[slot].X1, self.slots[slot].y1, self.slots[slot].x2, self.slots[slot].y2);
 end;
 
 (*
@@ -231,11 +263,10 @@ end;
 
 function rsps_inventory.countDTM(DTMSearch:Integer):Integer;
 var
-  i, x, y:Integer;
+  i:Integer;
 begin
-  result := 0;
   for i := 0 to high(self.slots) do
-    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    if (self.DTMExists(dtmSearch, i)) then
       result := result + 1;
 end;
 
@@ -246,12 +277,11 @@ end;
 
 function rsps_inventory.searchDTM(DTMSearch:Integer;click, cont:Boolean;button:Integer):Boolean;
 var
-  I, x, y:Integer;
+  i:Integer;
 begin
-  result := false;
   for i := 0 to high(self.slots) do
   begin
-    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    if self.DTMExists(dtmSearch, i) then
     begin
       result := true;
       if click then
@@ -269,12 +299,12 @@ end;
 
 function rsps_inventory.searchDTM(DTMSearch:Integer;cont:Boolean;button:Integer):Boolean; overload;
 var
-  I, x, y:Integer;
+  I:Integer;
 begin
   result := false;
   for i := 0 to high(self.slots) do
   begin
-    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    if self.DTMExists(dtmSearch, i) then
     begin
       result := true;
       self.interactItem(i, left);
@@ -296,7 +326,7 @@ begin
   result := false;
   for i := 0 to high(self.slots) do
   begin
-    if FindDTM(DTMSearch, x, y, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    if self.DTMExists(dtmSearch, i) then
     begin
       self.interactItem(i, button);
       exit(true);
@@ -343,8 +373,41 @@ begin
   if (not gameTab(TAB_INV)) then
     gameTab(TAB_INV);
   for i := 0 to 27 do
-    if findDTM(x, y, model, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2) then
+    if self.DTMExists(model, i) then
       exit(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a bitmap is
+*)
+
+function rsps_inventory.DTMPositionMulti(DTM:integer):TIntegerArray;
+var
+  i, x, y:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for i := 0 to 27 do
+    if DTMExists(DTM, i) then
+      result.append(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a bitmap is
+*)
+
+function rsps_inventory.DTMPositionMulti(DTM:TIntegerarray):TIntegerArray; overload;
+var
+  i, k:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for k := 0 to high(DTM) do
+    for i := 0 to 27 do
+      if DTMExists(DTM[k], i) then
+        result.append(i);
 end;
 
 (*
@@ -354,13 +417,48 @@ end;
 
 function rsps_inventory.bitmapPosition(bmp, tol:integer):integer;
 var
-  i, x, y:integer;
+  i:integer;
 begin
   if (not gameTab(TAB_INV)) then
     gameTab(TAB_INV);
   for i := 0 to 27 do
-    if findBitmapToleranceIn(x, y, bmp, self.slots[i].x1, self.slots[i].y1, self.slots[i].x2, self.slots[i].y2, tol) then
+    if self.bitmapExists(bmp, i, tol) then
       exit(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a bitmap is
+*)
+
+function rsps_inventory.bitmapPositionMulti(bmp, tol:integer):TIntegerArray;
+var
+  i:integer;
+begin
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for i := 0 to 27 do
+    if bitMapExists(bmp, i, tol) then
+      result.append(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns where in the inventory a bitmap is
+*)
+
+function rsps_inventory.bitmapPositionMulti(bmp, tol:TIntegerarray):TIntegerArray; overload;
+var
+  i, k:integer;
+begin
+  if (length(bmp) <> length(tol)) then
+    exit();
+  if (not gameTab(TAB_INV)) then
+    gameTab(TAB_INV);
+  for k := 0 to high(bmp) do
+    for i := 0 to 27 do
+      if bitMapExists(bmp[k], i, tol[k]) then
+        result.append(i);
 end;
 
 (*
@@ -380,4 +478,208 @@ begin
     mmouse(p.x, p.y, 0, 0);
     result := getSimpleText([4231423], 7, 62, 255, 77, 'upchars07');
   end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops item in a slot
+*)
+
+function _rsps_server.dropItem(slot:integer):boolean;
+begin
+  if not inventory.slotFull(slot) then
+    exit(true)
+  else begin
+    inventory.interactItem(slot, mouse_right);
+    exit(self.waitOption('rop', 200));
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items
+*)
+
+function _rsps_server.dropAll:boolean;
+var
+  i, c, k:integer;
+begin
+  c := inventory.count();
+  if (c = 0) then
+    exit(true);
+  for i := 0 to 27 do
+    if self.dropItem(i) then
+      k := k + 1;
+  exit(k = c);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items in a pattern
+*)
+
+function _rsps_server.dropAll(pattern:TIntegerArray):boolean; overload;
+var
+  i, c, k:integer;
+begin
+  c := inventory.count();
+  if (c = 0) then
+    exit(true);
+  for i := 0 to high(pattern) do
+    if self.dropItem(i) then
+      k := k + 1;
+  exit(k = c);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items except slots
+*)
+
+procedure _rsps_server.dropAllExcept(slots:TIntegerArray);
+var
+  i, k:integer;
+begin
+  for i := 0 to 27 do
+    for k := 0 to high(slots) do
+      if (i <> slots[k]) then
+        self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that don't contain a uptext
+*)
+
+procedure _rsps_server.dropAllButUptext(text:TStringArray);
+var
+  i:integer;
+begin
+  for i := 0 to 27 do
+    if inventory.slotFull(i) then
+    begin
+      inventory.mouseItem(i);
+      if not self.waitUpTextMulti(text, 120) then
+        self.dropItem(i);
+    end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item
+*)
+
+procedure _rsps_server.dropAllButBitmap(bmp, tol:integer);
+var
+  i:integer;
+begin
+  for i := 0 to 27 do
+    if not inventory.bitmapExists(bmp, i, tol) then
+      self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item
+*)
+
+procedure _rsps_server.dropAllButBitmap(bmp, tol:TIntegerArray);overload;
+var
+  i, k:integer;
+begin
+  if (length(bmp) <> length(tol)) then
+    exit();
+  for i := 0 to 27 do
+    for k := 0 to high(bmp) do
+      if not inventory.bitmapExists(bmp[k], i, tol[k]) then
+        self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item
+*)
+
+procedure _rsps_server.dropAllBitmap(bmp, tol:integer);
+var
+  i:integer;
+begin
+  for i := 0 to 27 do
+    if inventory.bitmapExists(bmp, i, tol) then
+      self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item
+*)
+
+procedure _rsps_server.dropBitmap(bmp, tol:TIntegerArray);overload;
+var
+  i, k:integer;
+begin
+  if (length(bmp) <> length(tol)) then
+    exit();
+  for i := 0 to 27 do
+    for k := 0 to high(bmp) do
+      if inventory.bitmapExists(bmp[k], i, tol[k]) then
+        self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item DTM
+*)
+
+procedure _rsps_server.dropAllButDTM(DTM:integer);
+var
+  i:integer;
+begin
+  for i := 0 to 27 do
+    if not inventory.DTMExists(DTM, i) then
+      self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item DTM
+*)
+
+procedure _rsps_server.dropAllButDTM(DTM:TIntegerArray);overload;
+var
+  i, k:integer;
+begin
+  for i := 0 to 27 do
+    for k := 0 to high(DTM) do
+      if not inventory.DTMExists(DTM[k], i) then
+        self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item DTM
+*)
+
+procedure _rsps_server.dropAllDTM(DTM:integer);
+var
+  i:integer;
+begin
+  for i := 0 to 27 do
+    if inventory.DTMExists(DTM, i) then
+      self.dropItem(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Drops all items that are not a item DTM
+*)
+
+procedure _rsps_server.dropDTM(DTM:TIntegerArray);overload;
+var
+  i, k:integer;
+begin
+  for i := 0 to 27 do
+    for k := 0 to high(DTM) do
+      if inventory.DTMExists(DTM[k], i) then
+        self.dropItem(i);
 end;

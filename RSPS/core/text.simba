@@ -7,6 +7,7 @@
 
 {$I RSPS/misc/Simba.Simba}
 {$I RSPS/misc/datatypes/string.Simba}
+{$I RSPS/core/mainscreen.Simba}
 
 (*
   Author: Officer Barbrady
@@ -200,11 +201,9 @@ var
   i:integer;
 begin
   textcolors := [16777215, 16776960, 65535, 65280, 4231423, 28927, 12543, 255];
+  setLength(textTPAS, length(textColors));
   for i := 0 to high(textcolors) do
-  begin
-    setLength(texttpas, (length(texttpas) + 1));
-    findColorsTolerance(texttpas[i], textcolors[i], 8, 61, 325, 85, 0);
-  end;
+    findColors(texttpas[i], textcolors[i], 8, 61, 325, 85);
   texttpa := mergeAtpa(texttpas);
   textatpa := splittpaex(texttpa, 1, 10);
   SortATPAFromFirstPointX(textatpa, Point(0, 0));
@@ -225,11 +224,9 @@ var
 begin
   textcolors := [14211802, 14276876, 65280, 4231423, 28927, 12543, 255];
   tols := [44, 40, 0, 0, 0, 0, 0];
+  setLength(textTPAS, length(textColors));
   for i := 0 to high(textcolors) do
-  begin
-    setLength(texttpas, (length(texttpas) + 1));
     findColorsTolerance(texttpas[i], textcolors[i], 8, 6, 325, 300, tols[i]);
-  end;
   texttpa := mergeAtpa(texttpas);
   debugtpa(texttpa, 'bmp');
   textatpa := splittpaex(texttpa, 1, 10);
@@ -698,4 +695,28 @@ var
   x,y : integer;
 begin
   Result := FindTextTPAEx(Color,Tol,xs,ys,xe,ye,x,y,Txt,chars,action);
+end;
+
+(*
+  Authors: Officer Barbrady
+  Description: Gets all overhead chat text
+*)
+
+function getOverHeadChatText:TStringArray;
+var
+  mainscreenTextTPA:TPointArray;
+  mainscreenTextATPA, textATPA:T2DPointArray;
+  i:integer;
+begin
+  findColors(mainscreenTextTPA, 65535, mainscreen.bounds);
+  if (length(mainscreenTextTPA) < 1) then
+    exit();
+  mainscreenTextATPA := clusterTPA(mainscreenTextTPA, 7);
+  setLength(result, length(mainscreenTextATPA));
+  for i := 0 to high(mainscreenTextATPA) do
+  begin
+    textATPA := splitTPAEx(mainscreenTextATPA[i], 1, 10);
+    sortATPAFromFirstPointX(textATPA, point(0, 0));
+    result[i] := getTextATPA(textATPA, 5, 'upchars07');
+  end;
 end;
