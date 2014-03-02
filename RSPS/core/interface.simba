@@ -82,3 +82,52 @@ begin
   b := _317_getInterfaceBounds();
   mouse(b.x2 - 15, b.y1 + 5);
 end;
+
+(*
+  Author: Officer Barbrady
+  Description: Closes interface
+*)
+
+function getSpellBookBounds():TBox;
+var
+  w, h:integer;
+  interfaceTPA:TPointarray;
+  interfaceATPA:T2DPointArray;
+begin
+  openTab(TAB_MAGIC);
+  getClientDimensions(w, h);
+  findColorsTolerance(interfaceTPA, 3358020, 0, 0, w - 1, h - 40, 14);
+  interfaceATPA := clusterTPA(interfaceTPA, 1);
+  filterTPAsBetween(interfaceATPA, 0, 2500);
+  if (length(interfaceATPA) = 1) then
+    result := getTPABoundS(interfaceATPA[0]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets name of spell
+*)
+
+function getSpellName():string;
+var
+  b:TBox;
+begin
+  b := getSpellBookBounds();
+  result := getSimpleText([42495], b.x1, b.y1, b.x2, b.y2, 'smallchars07');
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

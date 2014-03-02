@@ -32,6 +32,28 @@ begin
       end;
 end;
 
+function getCurrentTabString:string;
+begin
+  case getCurrentTab of
+    TAB_COMBAT : result := 'TAB_COMBAT';
+    TAB_STATS  : result := 'TAB_STATS';
+    TAB_QUEST  : result := 'TAB_QUEST';
+    TAB_INV    : result := 'TAB_INV';
+    TAB_EQUIP  : result := 'TAB_EQUIP';
+    TAB_PRAYER : result := 'TAB_PRAYER';
+    TAB_MAGIC  : result := 'TAB_MAGIC';
+    TAB_SUM    : result := 'TAB_SUM';
+    TAB_FRIENDS: result := 'TAB_FRIENDS';
+    TAB_IGNORE : result := 'TAB_IGNORE';
+    TAB_CLAN   : result := 'TAB_CLAN';
+    TAB_TOOLS  : result := 'TAB_TOOLS';
+    TAB_EMOTE  : result := 'TAB_EMOTE';
+    TAB_MUSIC  : result := 'TAB_MUSIC'
+    else
+      result := 'NULL';
+  end;
+end;
+
 (*
   Author: Officer Barbrady
   Description: Returns true if a tab is open

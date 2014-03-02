@@ -35,8 +35,8 @@ end;
 
 (*
   Author: Officer Barbrady
-  Description: Closes bank, just calls closeInterface called close bank for
-  naming purposes
+  Description: Closes bank, just calls closeInterface called close bank
+  for naming purposes (and old timers)
 *)
 
 procedure _317_closeBank();

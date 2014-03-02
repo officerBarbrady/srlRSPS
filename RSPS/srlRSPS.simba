@@ -22,7 +22,7 @@
 
 
 const
-  curbuild = 5;
+  curbuild = 6;
 
 
 function getLatest:integer;
