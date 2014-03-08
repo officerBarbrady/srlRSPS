@@ -116,18 +116,3 @@ begin
   result := getSimpleText([42495], b.x1, b.y1, b.x2, b.y2, 'smallchars07');
 end;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

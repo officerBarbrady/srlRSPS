@@ -1,0 +1,643 @@
+(*
+  File name: Prayer.simba
+  Description: Functions and procedure for prayers
+  Authors: Officer Barbrady
+*)
+
+//{$I RSPS/misc/datatypes/integerarrays.Simba}
+{^^^^^ same as interarrays.simba in SRL6 ^^^^^^}
+//{$I srl-6/lib/utilities/types/integerarrays.Simba}
+
+
+type
+  TPrayer = record
+    name:string;
+    level:integer;
+    exceptions:TIntegerArray;
+  end;
+
+  TPrayerArray = array of TPrayer;
+
+var
+  normals, curses:TPrayerArray;
+   {
+procedure mouse(ytr, ss:integer);
+begin
+  // temp added so could be tested as standalone script
+  moveMouse(ytr, ss);
+  wait(20 + random(25));
+  clickMouse(0, 0, 1);
+ // writeln('(', ytr, ',',ss,')');
+end;  }
+
+(*
+  Author: Officer Barbrady
+  Description: Starts up the prayer type
+*)
+
+procedure TPrayerArray.Init(book:string);
+var
+  i:integer;
+  names:TStringArray;
+  levels:TIntegerArray;
+  Exceptions2:T2DIntegerArray;
+
+begin
+  if (lowercase(book) = 'normal') then
+  begin
+    names := ['Thick skin', 'Burst of strength', 'Clarity of thought',
+    'Sharp eye', 'Mystic Will', 'Rock skin', 'Superhuman strength',
+    'Improved reflexes', 'Rapid restore','Rapid heal','Protect item',
+    'Hawk eye','Mystic lore','Steel skin','Ultimate strength',
+    'Incredible reflexes','Protect from summoning', 'Protect from magic',
+    'Protect from missles','Protect from melee','Eagle eye', 'Mystic might',
+    'Retribution','Redemption','Smite','Chivarly','Rapid renewal',
+    'Piety','Rigour','Augury'];
+    levels := [1, 4, 7, 8, 9, 10, 13, 16, 19, 22, 25, 26, 27, 28, 31,
+    34, 35, 37, 40, 43, 44, 45, 46, 49, 52, 60, 65, 70, 70, 70];
+    Exceptions2 := [
+    [5, 13, 25, 27, 28, 29],[3, 4, 6, 11, 12, 14, 20, 21, 25, 27, 28, 29],
+    [3, 4, 7, 11, 12, 15, 20, 21, 25, 27, 28, 29],[1, 2, 4, 6, 7, 11, 12, 14, 15, 20, 21, 25, 27, 28, 29],
+    [1, 2, 3, 6, 7, 11, 12, 14, 15, 20, 21, 25, 27, 28, 29],[0, 13, 25, 27, 28, 29],
+    [1, 3, 4, 11, 12, 14, 20, 21, 25, 27, 28, 29],[2, 3, 4, 11, 12, 15, 20, 21, 25, 27, 28, 29],
+    [26],[26],[],[1, 2, 3, 4, 6, 7, 12, 14, 15, 20, 21, 25, 27, 28, 29],
+    [1, 2, 3, 4, 6, 7, 11, 14, 15, 20, 21, 25, 27, 28, 29],[0, 5, 25, 27, 28, 29],
+    [1, 3, 4, 6, 11, 12, 20, 21, 25, 27, 28, 29],[2, 3, 4, 7, 11, 12, 20, 21, 25, 27, 28, 29],
+    [22, 24],[18, 19, 22, 24],[17, 19, 22, 24],[17, 18, 22, 24],[1, 2, 3, 4, 6, 7, 11, 12, 14, 15, 21, 25, 27, 28, 29],
+    [1, 2, 3, 4, 6, 7, 11, 12, 14, 15, 20, 25, 27, 28, 29],[17, 18, 19, 23, 24],
+    [17, 18, 19, 22, 24],[17, 18, 19, 22, 23],[0, 1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14, 15, 20, 21, 27, 28, 29],
+    [8, 9],[0, 1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14, 15, 20, 21, 25, 28, 29],
+    [0, 1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14, 15, 20, 21, 25, 27, 29],[0, 1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14, 15, 20, 21, 25, 27, 28]
+    ];
+    setLength(self, length(names));
+    for i := 0 to high(names) do
+    begin
+      self[i].name := names[i];
+      self[i].level := levels[i];
+      self[i].exceptions := Exceptions2[i];
+    end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets ID of the prayer (more like the index
+  in the type, but more easy to refer to it as an ID)
+*)
+
+function TPrayerArray.getID(name:string):integer;
+var
+  i:integer;
+begin
+  for i := 1 to high(self) do
+    if (lowercase(self[i - 1].name) = lowercase(name)) then
+      exit(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets IDs of the prayers (more like the index
+  in the type, but more easy to refer to it as an ID)
+*)
+
+function TPrayerArray.getIDs(names:tstringarray):TIntegerArray;
+var
+  i:integer;
+begin
+  setLength(result, length(names));
+  for i := 0 to high(names) do
+    result[i] := self.getID(names[i]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if 1 prayer cannot be used with another
+*)
+
+function TPrayerArray.prayerException(prayUse:TIntegerArray;prayerID:Integer):Boolean;
+var
+  i, l:Integer;
+begin
+  for i := 0 to high(PrayUse) do
+    for l := 0 to high(self[PrayUse[i]].Exceptions) do
+      if (prayerID = self[PrayUse[i]].Exceptions[l]) then
+        exit(true);
+       // writeln('You can not use ' + self[prayerID].name + ' and ' + self[PrayUse[i]].name + ' at the same time!');
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if 1 prayer cannot be used with another
+*)
+
+function TPrayerArray.prayerException(prayUse,prayerID:Integer):Boolean; overload;
+begin
+  result := self.prayerException([prayUse], prayerID);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if 1 prayer cannot be used with another
+*)
+
+function TPrayerArray.prayerException(PrayerList:TStringArray;Prayer:string):Boolean; overload;
+begin
+  result := self.prayerException(self.getIDs(prayerList), self.getID(prayer));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if 1 prayer cannot be used with another
+*)
+
+function TPrayerArray.prayerException(PrayerList,Prayer:string):Boolean; overload;
+begin
+  result := self.prayerException([self.getID(prayerList)], self.getID(prayer));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets all the activated prayers
+*)
+
+function TPrayerArray.getActivatedPrayers():TIntegerarray;
+var
+  i, k, c, startx, starty, u, e:integer;
+begin
+  openTab(TAB_PRAYER);
+  startx := 568;
+  starty := 283;
+  for k := 0 to 5 do
+    for i := 0 to 4 do
+    begin
+      c := c + 1;
+      if findColorTolerance(u, e, 7185335,
+      startx + (i * 39) - 11,
+      starty + (k * 37)- 11,
+      startx + (i * 39) + 11,
+      starty + (k * 37)+ 11,
+      7) then
+        result.append(c);
+    end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets all the prayers points on screen
+*)
+
+function TPrayerArray.getPrayerPointArray():TPointarray;
+var
+  i, k, c, startx, starty:integer;
+begin
+  startx := 568;
+  starty := 283;
+  setLength(result, 30);
+  for k := 0 to 5 do
+    for i := 0 to 4 do
+    begin
+      result[c] := Point(startx + (i * 39), starty + (k * 37));
+      c := c + 1;
+    end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets level required of the prayer
+*)
+
+function TPrayerArray.getLevel(ID:integer):integer;
+begin
+  if (ID < length(self)) then
+    result := self[ID - 1].level;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets level required of the prayer
+*)
+
+function TPrayerArray.getLevel(IDs:TIntegerArray):TIntegerArray; overload;
+var
+  i:integer;
+begin
+  setLength(result, length(IDs));
+  for i := 0 to high(IDs) do
+    result[i] := self.getLevel(i);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets level required of the prayer
+*)
+
+function TPrayerArray.getLevel(name:string):integer; overload;
+begin
+  result := self.getLevel(self.getID(name));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets level required of the prayer
+*)
+
+function TPrayerArray.getLevel(names:TStringArray):TIntegerArray; overload;
+var
+  i:integer;
+begin
+  setLength(result, length(names));
+  for i := 0 to high(names) do
+    result[i] := self.getLevel(self.getID(names[i]));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets name of the prayer in the type
+*)
+
+function TPrayerArray.getName(ID:integer):string;
+begin
+  if (ID > length(self)) then
+    exit('');
+  result := self[ID].name;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets IDs of the prayers (more like the index
+  in the type, but more easy to refer to it as an ID)
+*)
+
+function TPrayerArray.getNames(IDs:TIntegerArray):TStringArray;
+var
+  i:integer;
+begin
+  for i := 0 to high(IDs) do
+    result[i] := self.getName(IDs[i]);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets all a prayers point on screen
+*)
+
+function TPrayerArray.getPrayerPoint(name:String):TPoint;
+var
+  i, ID:integer;
+  prayerArray:TPointArray;
+begin
+  prayerArray := self.getPrayerPointArray();
+  ID := self.getID(name);
+  if (ID <> 0) then
+    result := prayerArray[ID - 1];
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets all a prayers point on screen
+*)
+
+function TPrayerArray.getPrayerPoint(ID:integer):TPoint; overload;
+var
+  i:integer;
+  prayerArray:TPointArray;
+begin
+  prayerArray := self.getPrayerPointArray();
+  if (ID > length(prayerArray)) then
+    exit(Point(0, 0));
+  if (ID <> 0) then
+    result := prayerArray[ID - 1];
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Checks if a prayer is on
+*)
+
+function TPrayerArray.isPrayerOn(ID:integer):boolean;
+var
+  x, y:integer;
+  prayerSpot:TPoint;
+begin
+  openTab(TAB_PRAYER);
+  prayerSpot := self.getPrayerPoint(ID);
+  result := findColorTolerance(x, y, 7185335, prayerSpot.x - 11, prayerSpot.y - 11, prayerSpot.x + 11, prayerSpot.y + 11, 7);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Checks if prayers is on
+*)
+
+function TPrayerArray.isPrayerOn(IDs:TIntegerArray):boolean; overload;
+var
+  i, c:integer;
+begin
+  for i := 0 to high(IDs) do
+    if self.isPrayerOn(IDs[i]) then
+      c := c + 1;
+  result := (c = length(IDs));
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Checks if a prayer is on, accepts name as
+  a arguement
+*)
+
+function TPrayerArray.isPrayerOn(name:string):boolean; overload;
+var
+  ID:integer;
+begin
+  ID := self.getID(name);
+  if (ID <> 0) then
+    result := self.isPrayerOn(ID - 1)
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Checks if a prayer is on, accepts names as
+  a arguement
+*)
+
+function TPrayerArray.isPrayerOn(names:TStringArray):boolean; overload;
+var
+  IDs:TIntegerArray;
+begin
+  IDs := self.getIDs(names);
+  result := self.isPrayerOn(IDs);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates the prayers, if ignoreOn is true then
+  it will click the prayer whether it is on or not otherwise
+  it will check if it's on before clicking.
+*)
+
+procedure TPrayerArray.activatePrayer(IDs:TIntegerarray;ignoreOn:boolean);
+var
+  p:TPoint;
+  i:integer;
+begin
+  openTab(TAB_PRAYER);
+  for i := 0 to high(IDs) do
+  begin
+    p := getPrayerPoint(IDs[i]);
+    if (ignoreOn) then
+      mouse(p.x, p.y)
+    else
+      if (not isPrayerOn(IDs[i])) then
+      begin
+        mouse(p.x, p.y);
+        wait(150 + random(150));
+      end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer IDs
+*)
+
+procedure TPrayerArray.activatePrayer(IDs:TIntegerArray); overload;
+begin
+  self.activatePrayer(IDs, false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer names
+*)
+
+procedure TPrayerArray.activatePrayer(names:TStringArray;ignoreOn:boolean); overload;
+begin
+  self.activatePrayer(self.getIDs(names), ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer names
+*)
+
+procedure TPrayerArray.activatePrayer(names:TStringArray); overload;
+begin
+  self.activatePrayer(self.getIDs(names), false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer ID
+*)
+
+procedure TPrayerArray.activatePrayer(ID:integer;ignoreOn:boolean); overload;
+begin
+  self.activatePrayer([ID], ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer ID
+*)
+
+procedure TPrayerArray.activatePrayer(ID:integer);overload;
+begin
+  self.activatePrayer([ID], false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer name
+*)
+
+procedure TPrayerArray.activatePrayer(name:string;ignoreOn:boolean);overload;
+begin
+  self.activatePrayer([name], ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Activates prayer name
+*)
+
+procedure TPrayerArray.activatePrayer(name:string);overload;
+begin
+  self.activatePrayer([name], false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deActivates the prayers, if ignoreOn is true then
+  it will click the prayer whether it is on or not otherwise
+  it will check if it's off before clicking.
+*)
+
+procedure TPrayerArray.deActivatePrayer(IDs:TIntegerarray;ignoreOn:boolean);
+var
+  p:TPoint;
+  i:integer;
+begin
+  openTab(TAB_PRAYER);
+  for i := 0 to high(IDs) do
+  begin
+    p := getPrayerPoint(IDs[i]);
+    if (ignoreOn) then
+      mouse(p.x, p.y)
+    else
+      if (isPrayerOn(IDs[i])) then
+      begin
+        mouse(p.x, p.y);
+        wait(150 + random(150));
+      end;
+  end;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer IDs
+*)
+
+procedure TPrayerArray.deActivatePrayer(IDs:TIntegerArray); overload;
+begin
+  self.deActivatePrayer(IDs, false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer names
+*)
+
+procedure TPrayerArray.deActivatePrayer(names:TStringArray;ignoreOn:boolean); overload;
+begin
+  self.deActivatePrayer(self.getIDs(names), ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer names
+*)
+
+procedure TPrayerArray.deActivatePrayer(names:TStringArray); overload;
+begin
+  self.deActivatePrayer(self.getIDs(names), false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer ID
+*)
+
+procedure TPrayerArray.deActivatePrayer(ID:integer;ignoreOn:boolean); overload;
+begin
+  self.deActivatePrayer([ID], ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer ID
+*)
+
+procedure TPrayerArray.deActivatePrayer(ID:integer);overload;
+begin
+  self.deActivatePrayer([ID], false);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer name
+*)
+
+procedure TPrayerArray.deActivatePrayer(name:string;ignoreOn:boolean);overload;
+begin
+  self.deActivatePrayer([name], ignoreOn);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: deactivates prayer name
+*)
+
+procedure TPrayerArray.deActivatePrayer(name:string);overload;
+begin
+  self.deActivatePrayer([name], false);
+end;
+
+procedure TPrayerArray.deActivateAll();
+var
+  activated:TIntegerArray;
+begin
+  openTab(TAB_PRAYER);
+  activated := self.getActivatedPrayers();
+  self.deActivatePrayer(activated);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Gets all the activated prayers in string form
+*)
+
+function TPrayerArray.getActivatedPrayersString():TStringArray;
+var
+  activatedPrayers:TIntegerArray;
+  i:integer;
+begin
+  openTab(TAB_PRAYER);
+  activatedPrayers := self.getActivatedPrayers();
+  setLength(result, length(activatedPrayers));
+  for i := 0 to high(activatedPrayers) do
+    result[i] := self[activatedPrayers[i] - 1].name;
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if you are able to activate a prayer without
+  turning another one off
+*)
+
+function TPrayerArray.canUse(ID:integer):boolean;
+var
+  activatedPrayers:TIntegerArray;
+begin
+  openTab(TAB_PRAYER);
+  activatedPrayers := self.getActivatedPrayers();
+  result := not self.prayerException(activatedPrayers, ID);
+end;
+
+(*
+  Author: Officer Barbrady
+  Description: Returns true if you are able to activate a prayer without
+  turning another one off (takes string as arguement)
+*)
+
+function TPrayerArray.canUse(name:string):boolean overload;
+var
+  activatedPrayers:TIntegerArray;
+  i, ID:integer;
+begin
+   openTab(TAB_PRAYER);
+  activatedPrayers := self.getActivatedPrayers();
+  ID := self.getID(name);
+  if (ID <> 0) then
+    result := not self.prayerException(activatedPrayers, ID - 1);
+end;
+
+function TPrayerArray.getActivatedCount():integer;
+begin
+  result := length(self.getPrayerPointArray());
+end;
+
+   {
+begin
+  normals.init('normal');
+ // writeln(normals.isPrayerOn('Protect item'));
+  //writeln(normals.getActivatedPrayersString());
+  writeln(normals.isPrayerOn(['Thick skin']));
+ // normals.activatePrayer(['Thick skin','Burst of strength', 'Clarity of thought']);
+  //wait(1200);
+ // normals.deActivateAll();
+ // writeln(normals.getID('Thick skin'));
+//  writeln(normals.prayerException('Thick skin', 'Piety'));
+//writeln(normals.getLevel('Piety'));
+  //normals.getPrayerPointArray();
+end.    }
+

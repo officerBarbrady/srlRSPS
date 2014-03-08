@@ -36,6 +36,7 @@ begin
       self.compassBox := intToBox(521, 2, 563, 46);
       //self.runBounds := intToBox(792, 481, 812, 504);
       self.compassColor := 1911089;
+      self.fontName := 'statchars07';
       screen_name := '317 mainscreen';
     end;
     507..719:
@@ -95,7 +96,7 @@ end;
 
 function minimap.getHealth:integer;
 begin
-  result := self.getText(map.healthBox, [65280, 501500, 65535, 855541], 'statchars07');
+  result := self.getText(map.healthBox, [65280, 501500, 65535, 855541], self.fontName);
 end;
 
 (*
@@ -105,7 +106,7 @@ end;
 
 function minimap.getPrayer:integer;
 begin
-  result := self.getText(map.prayerBox, [65280, 501500, 65535, 855541], 'statchars07');
+  result := self.getText(map.prayerBox, [65280, 501500, 65535, 855541], self.fontName);
 end;
 
 (*
@@ -115,7 +116,7 @@ end;
 
 function minimap.getRun:integer;
 begin
-  result := self.getText(map.runBox, [65280, 501500, 65535, 855541], 'statchars07');
+  result := self.getText(map.runBox, [65280, 501500, 65535, 855541], self.fontName);
 end;
 
 (*

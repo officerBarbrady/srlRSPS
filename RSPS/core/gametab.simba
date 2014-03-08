@@ -140,9 +140,12 @@ end;
   Description: Gets the total level
 *)
 
-function getTotalLevel:string;
+function getTotalLevel:integer;
 begin
-  if (not gameTab(TAB_STATS)) then
-    gameTab(TAB_STATS);
-  result := getSimpleText([65535], 626, 262, 660, 277, 'upchars07');
+  openTab(TAB_STATS);
+  try
+    result := StrToInt(getSimpleText([65535], 626, 262, 660, 277, 'upchars07'));
+  except
+    result := 0;
+  end;
 end;
