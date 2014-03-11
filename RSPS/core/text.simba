@@ -32,7 +32,7 @@ end;
 
 function ss_xpBarOpen:boolean;
 begin
-  result := (countColorTolerance(3885388, 410, 110, 508, 123, 5) >= 300) and (countColorTolerance(16777215, 410, 110, 508, 123, 5) >= 150);
+  result := (countColorTolerance(3885388, 410, 110, 508, 123, 5) >= 100) and (countColorTolerance(16777215, 410, 110, 508, 123, 5) >= 70);
 end;
 
 (*

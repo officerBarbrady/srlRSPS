@@ -97,8 +97,7 @@ end;
 
 function getFriendName(index:integer):string
 begin
-  if (not gameTab(TAB_FRIENDS)) then
-    gameTab(TAB_FRIENDS);
+  openTab(TAB_FRIENDS);
   result := getSimpleText([16777215], 556, 289 + (index * 15), 650, 299 + (index * 15), 'smallchars07');
 end;
 

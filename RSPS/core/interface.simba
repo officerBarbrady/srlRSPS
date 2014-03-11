@@ -48,7 +48,7 @@ begin
     exit;
   b := _317_getInterfaceBounds();
   b.y2 := b.y1 + 40;
-  result := getSimpleText([2070783, 37375], b.x1, b.y1, b.x2, b.y2, 'upchars07');
+  result := getSimpleText([2070783, 37375, 65535], b.x1, b.y1, b.x2, b.y2, 'upchars07');
 end;
 
 (*
